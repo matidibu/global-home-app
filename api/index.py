@@ -23,21 +23,20 @@ def generate():
         perfil = data.get('perfil')
         idioma = data.get('idioma', 'Español')
         
-        # Prompt optimizado para asegurar datos
         prompt = f"""
-        Como Asesor Senior, genera una guía en {idioma} para un {nac} viajando a {dest}.
+        Actúa como un Consultor de Viajes Senior. Genera una guía en {idioma} para un {nac} en {dest}.
         Estilo: {estilo}, Perfil: {perfil}.
-        Responde exclusivamente en JSON con esta estructura:
+        Responde estrictamente en JSON:
         {{
-            "b": "Bienvenida vital",
-            "requisitos": "Lista de 3 a 5 requisitos migratorios (Visa, Pasaporte, etc)",
+            "b": "Bienvenida profesional",
+            "requisitos": "Lista de requisitos de entrada (Visas, seguros, pasaporte)",
             "servicios": {{
-                "consulado": {{"n": "Embajada de {nac}", "m": "https://www.google.com/maps/search/embassy+{nac}+{dest}"}},
+                "consulado": {{"n": "Consulado de {nac}", "m": "https://www.google.com/maps/search/consulado+{nac}+{dest}"}},
                 "hospital": {{"n": "Hospital de Referencia", "m": "https://www.google.com/maps/search/hospital+{dest}"}},
-                "policia": {{"n": "Seguridad Local", "m": "https://www.google.com/maps/search/police+{dest}"}}
+                "policia": {{"n": "Policía Local", "m": "https://www.google.com/maps/search/police+station+{dest}"}}
             }},
             "puntos": [
-                {{"n": "Nombre", "h": "Horarios", "p": "Precio", "t": "Transporte", "s": "Tip experto", "key": "Nombre en inglés para fotos"}}
+                {{"n": "Lugar", "h": "Horario", "p": "Precio", "t": "Transporte", "s": "Tip experto", "img_keywords": "famous landmark {dest}"}}
             ]
         }}
         """
@@ -51,5 +50,3 @@ def generate():
         return jsonify(json.loads(completion.choices[0].message.content))
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-app = app
