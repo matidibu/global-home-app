@@ -4,25 +4,36 @@ from flask import Flask, render_template, request, jsonify
 from groq import Groq
 from supabase import create_client
 
-# --- CONFIGURACIÓN DE LA APP ---
-# Usamos os.path para que Vercel encuentre la carpeta 'templates' sin errores
+# Configuración de rutas para Vercel
 base_dir = os.path.dirname(os.path.abspath(__file__))
 template_dir = os.path.join(base_dir, '..', 'templates')
 
 app = Flask(__name__, template_folder=template_dir)
 
-# --- INICIALIZACIÓN DE CLIENTES ---
-# Vercel leerá estas variables desde 'Environment Variables'
-try:
-    supabase = create_client(
-        os.getenv("SUPABASE_URL", ""), 
-        os.getenv("SUPABASE_KEY", "")
-    )
-    client = Groq(api_key=os.getenv("GROQ_API_KEY"))
-except Exception as e:
-    print(f"Error cargando configuraciones: {e}")
+def get_ai_response(nacionalidad, destino):
+    try:
+        api_key = os.environ.get("GROQ_API_KEY")
+        
+        if not api_key:
+            return {"error": "Falta la llave GROQ_API_KEY en Vercel"}
 
-# --- RUTAS ---
+        client = Groq(api_key=api_key)
+        
+        # ACTUALIZACIÓN: Usamos el modelo llama-3.3-70b-versatile (actualizado a 2026)
+        system_prompt = f"""
+        Eres 'Global Home Assist'. El usuario es de {nacionalidad} y viaja a {destino}.
+        Responde en JSON con estas llaves exactas: 'bienvenida', 'pasos_pasaporte', 'emergencias', 'consejo_hogar'.
+        Tono: Contenedor y profesional.
+        """
+
+        completion = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[{"role": "system", "content": system_prompt}],
+            response_format={"type": "json_object"}
+        )
+        return json.loads(completion.choices[0].message.content)
+    except Exception as e:
+        return {"error": str(e)}
 
 @app.route('/')
 def home():
@@ -32,35 +43,18 @@ def home():
 def generate():
     try:
         data = request.json
-        destino = data.get('destino', 'un destino desconocido')
-        nacionalidad = data.get('nacionalidad', 'viajero')
+        nacionalidad = data.get('nacionalidad', 'Viajero')
+        destino = data.get('destino', 'el mundo')
         
-        # El "System Prompt" define la personalidad de Global Home Assist
-        system_prompt = f"""
-        Eres el asistente de 'Global Home Assist'. Tu misión es que el usuario se sienta SEGURO y en CASA.
-        El usuario es de {nacionalidad} y viaja a {destino}.
-        Proporciona:
-        1. Un mensaje cálido de bienvenida.
-        2. Pasos exactos si pierde su pasaporte (Consulado de {nacionalidad} en {destino}).
-        3. Números de emergencia locales.
-        4. Un consejo para disfrutar el lugar sin miedos.
-        Responde SIEMPRE en formato JSON con estas llaves exactas: 
-        'bienvenida', 'pasos_pasaporte', 'emergencias', 'consejo_hogar'.
-        """
-
-        completion = client.chat.completions.create(
-            model="llama3-8b-8192",
-            messages=[{"role": "system", "content": system_prompt}],
-            response_format={"type": "json_object"}
-        )
+        resultado = get_ai_response(nacionalidad, destino)
         
-        # Convertimos la respuesta de la IA a JSON para el frontend
-        respuesta_ia = json.loads(completion.choices[0].message.content)
-        return jsonify(respuesta_ia)
-
+        if "error" in resultado:
+            print(f"Error detectado: {resultado['error']}")
+            return jsonify(resultado), 500
+        
+        return jsonify(resultado)
     except Exception as e:
-        print(f"Error en la generación: {e}")
-        return jsonify({"error": "No pudimos conectar con el asistente. Reintenta."}), 500
+        return jsonify({"error": str(e)}), 500
 
-# Esto es vital para que Vercel reconozca la función
+# Exportar para Vercel
 app = app
