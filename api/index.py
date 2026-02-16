@@ -21,27 +21,24 @@ def generate():
         nac = data.get('nacionalidad', 'Argentino')
         
         prompt = f"""
-        Actúa como guía de élite. Para un {nac} en {dest}, responde SOLO un JSON con:
-        'b': Bienvenida corta,
-        'clima': Descripción del clima,
-        'h': Hospital recomendado,
-        'c': Consulado de {nac} en {dest},
-        'e': Protocolo seguridad,
-        'puntos': Una lista de 5 objetos, cada uno con:
-           'n': Nombre del lugar,
-           'h': Horarios,
-           'p': Precio,
-           't': Transporte,
-           's': Sugerencia experta,
-           'link': Link de búsqueda en Civitatis para {dest},
-           'maps': Link de Google Maps para el lugar en {dest}
+        Eres un Concierge de Lujo para 'Global Home Assist'.
+        Destino: {dest}, Pasajero: {nac}.
+        Responde estrictamente en JSON con:
+        'b': Bienvenida elegante y tranquilizadora.
+        'clima': Info del clima.
+        'servicios': {{
+            'consulado': {{'info': 'Nombre y dirección', 'maps': 'Link Google Maps'}},
+            'hospital': {{'info': 'Nombre y dirección', 'maps': 'Link Google Maps'}},
+            'policia': {{'info': 'Estación central/emergencia', 'maps': 'Link Google Maps'}}
+        }},
+        'puntos': [5 lugares con: 'n' (nombre), 'h' (horario), 'p' (precio), 't' (transporte), 's' (tip), 'img' (URL imagen Unsplash sobre {dest} y el lugar), 'link' (Civitatis), 'maps' (Google Maps)]
         """
 
         completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[{"role": "user", "content": prompt}],
             response_format={"type": "json_object"},
-            temperature=0.2
+            temperature=0.3
         )
         
         return jsonify(json.loads(completion.choices[0].message.content))
