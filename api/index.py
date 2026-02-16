@@ -22,7 +22,7 @@ def generate():
         prompt = f"""
         Concierge VIP. Idioma: {idioma}. Destino: {dest}. Viajero: {nac}. Estilo: {estilo.upper()}.
         REQUISITOS: Ortografía perfecta. Nombres propios con Mayúscula. 
-        Costos en USD y EUR obligatoriamente.
+        Costos en USD y EUR.
         
         Responde en JSON:
         {{
@@ -31,11 +31,8 @@ def generate():
             "puntos": [
                 {{
                     "n": "Nombre Del Lugar",
-                    "h": "Horarios",
                     "p": "XX USD / XX EUR",
-                    "t": "Transporte VIP",
-                    "s": "Tip experto",
-                    "img_query": "{dest} {estilo} landmark"
+                    "s": "Tip experto"
                 }}
             ]
         }}
