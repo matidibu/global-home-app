@@ -17,40 +17,31 @@ def home():
 def generate():
     try:
         data = request.json
-        dest = data.get('destino')
-        nac = data.get('nacionalidad')
-        estilo = data.get('estilo')
-        perfil = data.get('perfil')
-        idioma = data.get('idioma')
-        moneda_nac = data.get('moneda') # Ej: ARS, MXN, EUR
+        # Extraemos variables para personalización extrema
+        dest, nac, estilo = data.get('destino'), data.get('nacionalidad'), data.get('estilo')
+        perfil, idioma, moneda = data.get('perfil'), data.get('idioma'), data.get('moneda')
         
         prompt = f"""
-        Actúa como un Concierge VIP Internacional. Genera una guía en {idioma}.
-        Perfil: {perfil} | Nivel: {estilo.upper()} | Viajero de: {nac}.
+        Actúa como un Concierge VIP con estándares de GetYourGuide y Forbes Travel Guide.
+        Ciudad: {dest}. Viajero: {nac}. Nivel: {estilo}. Idioma: {idioma}.
         
-        INSTRUCCIÓN DE MONEDA:
-        Para cada precio mencionado en 'puntos', indica el costo estimado en:
-        1. Moneda local de {dest}.
-        2. Moneda del viajero ({moneda_nac}).
-        3. Dólares Estadounidenses (USD).
-
-        Responde estrictamente en JSON:
+        INSTRUCCIONES DE CURADURÍA:
+        - Si es PREMIUM: Solo opciones de exclusividad mundial (Michelin, VIP access, Luxury Cars).
+        - Si es ECONOMICO: Opciones inteligentes de alto valor pero bajo costo.
+        - MONEDA: Precios en local de {dest}, en {moneda} y en USD.
+        
+        Responde en JSON:
         {{
-            "b": "Bienvenida cálida y profesional",
-            "requisitos": "Visa, pasaportes y tasas para {nac} entrando a {dest}",
-            "servicios": {{
-                "consulado": {{"n": "Representación de {nac}", "m": "http://googleusercontent.com/maps.google.com/search?q=consulate+{nac}+{dest}"}},
-                "hospital": {{"n": "Hospital de Referencia {estilo}", "m": "http://googleusercontent.com/maps.google.com/search?q=hospital+{dest}"}},
-                "policia": {{"n": "Seguridad Central", "m": "http://googleusercontent.com/maps.google.com/search?q=police+station+{dest}"}}
-            }},
+            "b": "Bienvenida sofisticada",
+            "requisitos": "Visa, salud y aduana detallados",
             "puntos": [
                 {{
-                    "n": "Nombre del lugar", 
-                    "h": "Horarios sugeridos", 
-                    "p": "Costo en moneda local / {moneda_nac} / USD", 
-                    "t": "Transporte recomendado", 
-                    "s": "Consejo de experto",
-                    "key": "Lugar emblemático de {dest}"
+                    "n": "Nombre Real",
+                    "h": "Horarios",
+                    "p": "Precios (Local / {moneda} / USD)",
+                    "t": "Transporte Elite",
+                    "s": "Tip de Insider para {perfil}",
+                    "query": "Termino exacto de búsqueda para imagen de alta calidad de {dest}"
                 }}
             ]
         }}
@@ -61,7 +52,6 @@ def generate():
             messages=[{"role": "user", "content": prompt}],
             response_format={"type": "json_object"}
         )
-        
         return jsonify(json.loads(completion.choices[0].message.content))
     except Exception as e:
         return jsonify({"error": str(e)}), 500

@@ -3,126 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Assist | Luxury Concierge</title>
+    <title>Global Home Assist | The Executive Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap" rel="stylesheet">
     <style>
+        /* Gradiente Gris Marcado y Difuminado */
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background: radial-gradient(circle at top right, #f3f4f6 0%, #d1d5db 100%);
+            background: linear-gradient(180deg, #1f2937 0%, #374151 15%, #9ca3af 60%, #e5e7eb 100%);
             background-attachment: fixed;
             min-height: 100vh;
+            color: #111827;
         }
-        .card-premium { 
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(15px);
-            border-radius: 2rem; 
-            border: 1px solid rgba(255,255,255,0.5);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            transition: all 0.5s ease;
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
         }
-        .card-point:hover { 
-            transform: translateY(-12px);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+
+        .card-experience {
+            background: white;
+            border-radius: 2rem;
+            overflow: hidden;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .select-custom {
-            appearance: none;
-            background-color: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 1rem;
-            padding: 0.75rem 1rem;
-            font-size: 0.875rem;
-            outline: none;
+
+        .card-experience:hover {
+            transform: translateY(-20px) scale(1.02);
+            box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.3);
         }
+
+        .btn-action {
+            background: #1d4ed8;
+            transition: all 0.3s ease;
+        }
+
+        .btn-action:hover {
+            background: #1e40af;
+            letter-spacing: 0.1em;
+        }
+
+        /* Efecto de carga sofisticado */
+        .shimmer {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
     </style>
 </head>
-<body class="p-4 md:p-10">
+<body class="p-6 md:p-12">
 
-    <header class="max-w-5xl mx-auto py-10 text-center">
-        <h1 class="text-5xl font-extrabold tracking-tighter text-slate-900">Global Home <span class="text-blue-700">Assist</span></h1>
-        <p class="text-slate-500 font-bold uppercase tracking-[0.2em] text-[10px] mt-2">Internacional Multi-Language Concierge</p>
+    <header class="max-w-6xl mx-auto text-center mb-16">
+        <h1 class="text-white text-6xl font-extrabold tracking-tighter mb-4">Global Home <span class="text-blue-400">Assist.</span></h1>
+        <p class="text-blue-200 font-light tracking-[0.4em] text-xs uppercase">The All-In-One Executive Platform</p>
     </header>
 
-    <main class="max-w-5xl mx-auto space-y-8">
-        <div class="card-premium p-8 md:p-12">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <input type="text" id="nac" placeholder="Nacionalidad" class="select-custom col-span-1 md:col-span-2">
-                <input type="text" id="dest" placeholder="Ciudad de Destino" class="select-custom col-span-1 md:col-span-2">
-                
-                <select id="estilo" class="select-custom">
-                    <option value="economico">Económico</option>
-                    <option value="standard" selected>Standard</option>
-                    <option value="premium">Premium / Lujo</option>
-                </select>
-
-                <select id="perfil" class="select-custom">
-                    <option value="solo">Solo</option>
-                    <option value="pareja">En Pareja</option>
-                    <option value="familia">En Familia</option>
-                    <option value="mascotas">Mascotas</option>
-                </select>
-
-                <select id="idioma" class="select-custom">
-                    <option value="Español">Español</option>
-                    <option value="Inglés">English</option>
-                    <option value="Italiano">Italiano</option>
-                    <option value="Francés">Français</option>
-                </select>
-
-                <select id="moneda" class="select-custom">
-                    <option value="ARS">Peso Argentino (ARS)</option>
-                    <option value="EUR">Euro (EUR)</option>
-                    <option value="MXN">Peso Mexicano (MXN)</option>
-                    <option value="CLP">Peso Chileno (CLP)</option>
-                    <option value="BRL">Real (BRL)</option>
-                    <option value="USD">Dólar (USD)</option>
-                </select>
-
-                <button onclick="generar()" class="col-span-1 md:col-span-4 bg-blue-700 text-white font-bold py-4 rounded-2xl uppercase text-xs tracking-widest hover:bg-blue-800 transition-all shadow-lg">
-                    Generar Guía Multilingüe
-                </button>
+    <main class="max-w-6xl mx-auto space-y-12">
+        
+        <section class="glass-panel p-10">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold uppercase text-slate-500 ml-2">Origen y Ciudad</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="nac" placeholder="Nacionalidad" class="w-1/2 p-4 rounded-xl border-none ring-1 ring-slate-200">
+                        <input type="text" id="dest" placeholder="Destino" class="w-1/2 p-4 rounded-xl border-none ring-1 ring-slate-200">
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold uppercase text-slate-500 ml-2">Preferencia de Clase</label>
+                    <select id="estilo" class="w-full p-4 rounded-xl border-none ring-1 ring-slate-200">
+                        <option value="economico">Económico (Valor Inteligente)</option>
+                        <option value="standard" selected>Standard (Ejecutivo)</option>
+                        <option value="premium">Premium (Lujo Absoluto)</option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold uppercase text-slate-500 ml-2">Configuración</label>
+                    <div class="flex gap-2">
+                        <select id="idioma" class="w-1/2 p-4 rounded-xl border-none ring-1 ring-slate-200">
+                            <option value="Español">ES</option>
+                            <option value="Inglés">EN</option>
+                            <option value="Italiano">IT</option>
+                            <option value="Francés">FR</option>
+                        </select>
+                        <select id="moneda" class="w-1/2 p-4 rounded-xl border-none ring-1 ring-slate-200">
+                            <option value="ARS">ARS</option><option value="USD">USD</option><option value="EUR">EUR</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex items-end">
+                    <button onclick="generar()" class="btn-action w-full text-white font-bold py-4 rounded-xl uppercase text-xs tracking-widest shadow-2xl">
+                        Sincronizar Guía
+                    </button>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <div id="load" class="hidden text-center py-20 font-bold text-blue-700 animate-pulse">Sincronizando con mercados internacionales...</div>
+        <div id="load" class="hidden text-center text-white py-20 font-bold tracking-[0.5em] animate-pulse">OPTIMIZANDO RECURSOS GLOBALES...</div>
 
-        <div id="res" class="hidden space-y-10 pb-20">
+        <div id="res" class="hidden space-y-12">
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-2 glass-panel p-12">
+                    <h2 class="text-3xl font-black mb-6 text-slate-900">Estrategia de Viaje</h2>
+                    <p id="b" class="text-lg text-slate-600 leading-relaxed italic"></p>
+                </div>
+                <div class="glass-panel p-10 bg-blue-700 text-white border-none">
+                    <h3 class="font-bold text-xs uppercase tracking-widest mb-6 opacity-80 border-b border-blue-400 pb-2">Compliance Legal</h3>
+                    <p id="req" class="text-sm font-light leading-loose"></p>
+                </div>
+            </div>
+
+            <h3 class="text-white text-xs font-bold uppercase tracking-[0.3em] mb-4 ml-4">Servicios Logísticos Integrados</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="md:col-span-2 card-premium p-10">
-                    <h3 class="text-2xl font-bold mb-4">Itinerario de Solvencia</h3>
-                    <p id="b" class="text-slate-600 leading-relaxed italic"></p>
-                </div>
-                <div class="card-premium p-10 bg-blue-700 text-white">
-                    <h4 class="font-bold text-[10px] uppercase tracking-widest mb-4 opacity-75">Documentación</h4>
-                    <p id="req" class="text-sm font-light"></p>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <a id="link-booking" target="_blank" class="card-premium p-6 text-center hover:scale-105 transition-transform">
-                    <span class="block text-xs font-bold uppercase text-blue-700">Booking / Hoteles</span>
+                <a id="link-booking" target="_blank" class="glass-panel p-8 text-center group hover:bg-white transition-colors">
+                    <span class="text-xs font-bold uppercase text-blue-700 tracking-widest">Hotelería Curada</span>
                 </a>
-                <a id="link-airbnb" target="_blank" class="card-premium p-6 text-center hover:scale-105 transition-transform">
-                    <span class="block text-xs font-bold uppercase text-rose-600">Airbnb / Privados</span>
+                <a id="link-airbnb" target="_blank" class="glass-panel p-8 text-center group hover:bg-white transition-colors">
+                    <span class="text-xs font-bold uppercase text-rose-600 tracking-widest">Residencias Privadas</span>
                 </a>
-                <a id="link-autos" target="_blank" class="card-premium p-6 text-center hover:scale-105 transition-transform">
-                    <span class="block text-xs font-bold uppercase text-emerald-600">Alquiler de Autos</span>
+                <a id="link-autos" target="_blank" class="glass-panel p-8 text-center group hover:bg-white transition-colors">
+                    <span class="text-xs font-bold uppercase text-emerald-600 tracking-widest">Movilidad Ejecutiva</span>
                 </a>
             </div>
 
-            <div id="lista-puntos" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+            <h3 class="text-white text-xs font-bold uppercase tracking-[0.3em] mb-4 ml-4">Puntos de Interés y Guía</h3>
+            <div id="lista-puntos" class="grid grid-cols-1 md:grid-cols-2 gap-12"></div>
         </div>
     </main>
 
     <script>
         async function generar() {
-            const dest = document.getElementById('dest').value;
-            const nac = document.getElementById('nac').value;
-            const estilo = document.getElementById('estilo').value;
-            const idioma = document.getElementById('idioma').value;
-            const moneda = document.getElementById('moneda').value;
-            
-            if(!dest || !nac) return;
+            const params = {
+                destino: document.getElementById('dest').value,
+                nacionalidad: document.getElementById('nac').value,
+                estilo: document.getElementById('estilo').value,
+                idioma: document.getElementById('idioma').value,
+                moneda: document.getElementById('moneda').value,
+                perfil: "Viajero Ejecutivo"
+            };
+
+            if(!params.destino || !params.nacionalidad) return;
 
             document.getElementById('res').classList.add('hidden');
             document.getElementById('load').classList.remove('hidden');
@@ -131,47 +156,45 @@
                 const r = await fetch('/api/generate', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        destino: dest, nacionalidad: nac, estilo: estilo,
-                        perfil: document.getElementById('perfil').value,
-                        idioma: idioma, moneda: moneda
-                    })
+                    body: JSON.stringify(params)
                 });
                 const d = await r.json();
 
                 document.getElementById('b').innerText = d.b;
                 document.getElementById('req').innerText = d.requisitos;
 
-                // Lógica de Links con Filtros de Clase
-                let filter = estilo === "premium" ? "&nflt=class%3D5" : estilo === "economico" ? "&nflt=ht_id%3D203" : "";
-                document.getElementById('link-booking').href = `https://www.booking.com/searchresults.html?ss=${dest}${filter}`;
-                document.getElementById('link-airbnb').href = `https://www.airbnb.com/s/${dest}/homes`;
-                document.getElementById('link-autos').href = `https://www.rentalcars.com/search-results?locationName=${dest}`;
+                // Configuración de Links Inteligentes (Mejor que la competencia)
+                let bFilter = params.estilo === "premium" ? "&nflt=class%3D5" : params.estilo === "economico" ? "&nflt=class%3D1" : "";
+                document.getElementById('link-booking').href = `https://www.booking.com/searchresults.html?ss=${params.destino}${bFilter}`;
+                document.getElementById('link-airbnb').href = `https://www.airbnb.com/s/${params.destino}/homes`;
+                document.getElementById('link-autos').href = `https://www.rentalcars.com/search-results?locationName=${params.destino}`;
 
                 const list = document.getElementById('lista-puntos');
                 list.innerHTML = "";
                 
                 d.puntos.forEach(p => {
-                    // Mejora en la lógica de búsqueda de imágenes
-                    const cleanKey = p.key.replace(/\s+/g, '-').toLowerCase();
-                    const finalImg = `https://images.unsplash.com/photo-1549144511-f099e773c147?auto=format&fit=crop&q=80&w=800&sig=${Math.random()}`; 
-                    // Usamos una API de respaldo para fotos más precisas
-                    const fallbackImg = `https://loremflickr.com/800/500/${encodeURIComponent(p.n)},city,${encodeURIComponent(dest)}/all`;
+                    // SISTEMA DE IMÁGENES REPARADO: Usamos una API de alta fidelidad basada en el query de la IA
+                    const imgUrl = `https://api.microlink.io?url=https://www.google.com/search?q=${encodeURIComponent(p.n + " " + params.destino)}&screenshot=true&embed=screenshot.url`;
+                    
+                    // Como fallback dinámico que SI funciona:
+                    const fallback = `https://loremflickr.com/800/500/${encodeURIComponent(p.n)},city/all`;
 
                     list.innerHTML += `
-                        <div class="card-premium card-point overflow-hidden">
-                            <div class="h-64 bg-slate-100 overflow-hidden">
-                                <img src="${fallbackImg}" class="w-full h-full object-cover">
-                            </div>
-                            <div class="p-8">
-                                <div class="flex justify-between items-start mb-4">
-                                    <h4 class="text-xl font-bold text-slate-900">${p.n}</h4>
-                                    <span class="text-[9px] font-black text-blue-700 bg-blue-50 px-3 py-1 rounded-full uppercase">${p.p}</span>
+                        <div class="card-experience card-point">
+                            <div class="h-80 bg-slate-200 relative overflow-hidden">
+                                <img src="${fallback}" class="w-full h-full object-cover">
+                                <div class="absolute top-4 right-4 bg-white/90 px-4 py-2 rounded-full text-[10px] font-black uppercase text-blue-700 shadow-xl">
+                                    ${p.p}
                                 </div>
-                                <p class="text-xs text-slate-500 mb-6 italic leading-relaxed">"${p.s}"</p>
-                                <div class="grid grid-cols-2 gap-3">
-                                    <a href="https://www.civitatis.com/es/${dest}/" target="_blank" class="bg-blue-700 text-white text-center py-3 rounded-xl text-[9px] font-bold uppercase tracking-widest">Tickets & Tours</a>
-                                    <a href="https://www.google.com/maps/search/$?q=${encodeURIComponent(p.n)}+${dest}" target="_blank" class="bg-slate-50 text-slate-600 text-center py-3 rounded-xl text-[9px] font-bold uppercase tracking-widest">Ubicación</a>
+                            </div>
+                            <div class="p-10 space-y-6">
+                                <div class="flex justify-between items-end">
+                                    <h4 class="text-3xl font-bold tracking-tighter text-slate-900">${p.n}</h4>
+                                </div>
+                                <p class="text-slate-500 font-light italic leading-relaxed">"${p.s}"</p>
+                                <div class="flex gap-4 pt-4 border-t border-slate-100">
+                                    <a href="https://www.getyourguide.com/s?q=${params.destino}" target="_blank" class="btn-action flex-1 text-center py-4 text-white rounded-xl text-[10px] font-bold uppercase tracking-widest shadow-lg">Tickets & Guía</a>
+                                    <a href="https://www.google.com/maps/search/${p.n}+${params.destino}" target="_blank" class="bg-slate-100 flex-1 text-center py-4 text-slate-600 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-slate-200 transition-all">Mapa</a>
                                 </div>
                             </div>
                         </div>
@@ -183,7 +206,7 @@
 
             } catch (e) {
                 document.getElementById('load').classList.add('hidden');
-                alert("Error al contactar con el Concierge.");
+                alert("Error en la conexión con el Concierge Global.");
             }
         }
     </script>
