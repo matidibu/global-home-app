@@ -8,78 +8,70 @@
     <style>
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            /* Gris Suave y Elegante */
-            background: linear-gradient(180deg, #64748b 0%, #cbd5e1 50%, #f8fafc 100%);
+            background: linear-gradient(180deg, #1e293b 0%, #475569 35%, #94a3b8 70%, #f1f5f9 100%);
             background-attachment: fixed; min-height: 100vh;
         }
-        .glass-panel { background: rgba(255, 255, 255, 0.98); border-radius: 2rem; border: 1px solid rgba(255,255,255,0.5); }
+        .glass-panel { background: rgba(255, 255, 255, 0.98); border-radius: 2rem; border: 1px solid rgba(255,255,255,0.5); shadow: 0 10px 30px rgba(0,0,0,0.1); }
         .card-point { border-radius: 1.5rem; overflow: hidden; background: white; transition: 0.4s; height: 100%; display: flex; flex-direction: column; }
-        .card-point:hover { transform: translateY(-8px); box-shadow: 0 20px 30px rgba(0,0,0,0.1); }
-        .logo-container { display: flex; align-items: center; gap: 12px; }
+        .card-point:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body class="p-4 md:p-10">
 
     <header class="max-w-7xl mx-auto flex justify-between items-center mb-10">
-        <div class="logo-container">
-            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
-                <span class="text-blue-700 text-2xl font-black">G</span>
-            </div>
-            <h1 class="text-2xl font-extrabold tracking-tighter italic text-white">GLOBAL HOME <span class="font-light">ASSIST</span></h1>
+        <div class="flex items-center gap-4">
+            <img src="https://i.ibb.co/LhqZz1L/logo-global-home.png" alt="Logo" class="w-12 h-12 rounded-full shadow-lg border-2 border-white">
+            <h1 class="text-2xl font-extrabold tracking-tighter italic text-white uppercase">Global Home <span class="font-light">Assist</span></h1>
         </div>
-        <div class="hidden md:flex gap-6 text-white opacity-80 font-bold text-xs uppercase tracking-widest">
+        <div class="hidden md:flex gap-6 text-white text-xs font-bold uppercase tracking-[0.2em] opacity-80">
             <span>Explorar</span><span>Servicios</span><span>Mi Cuenta</span>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto space-y-8">
         <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="glass-panel p-8 space-y-4 shadow-lg">
-                <h3 class="font-bold text-gray-800 border-b pb-2 text-xs uppercase tracking-widest">Configuración</h3>
-                <div class="space-y-3">
-                    <input type="text" id="nac" placeholder="Nacionalidad" class="w-full border-b p-2 outline-none bg-transparent">
-                    <input type="text" id="dest" placeholder="Destino (Ciudad)" class="w-full border-b p-2 outline-none bg-transparent">
-                    <select id="idioma" class="w-full border-b p-2 outline-none bg-transparent text-sm">
-                        <option value="Español">Español</option>
-                        <option value="Inglés">English</option>
-                    </select>
-                </div>
+            <div class="glass-panel p-8 space-y-4 shadow-xl border-t-4 border-blue-500">
+                <h3 class="font-bold text-gray-800 text-xs uppercase border-b pb-2 tracking-widest">Configuración de Viaje</h3>
+                <input type="text" id="nac" placeholder="Nacionalidad" class="w-full border-b p-2 outline-none">
+                <input type="text" id="dest" placeholder="Ciudad Destino" class="w-full border-b p-2 outline-none">
+                <select id="idioma" class="w-full border-b p-2 outline-none bg-transparent">
+                    <option value="Español">Español</option>
+                    <option value="Inglés">English</option>
+                    <option value="Italiano">Italiano</option>
+                </select>
             </div>
 
-            <div class="glass-panel p-8 flex flex-col justify-between shadow-lg text-center">
-                <select id="estilo" class="w-full p-3 border rounded-xl bg-gray-50 text-sm font-bold mb-4">
+            <div class="glass-panel p-8 flex flex-col justify-between shadow-xl">
+                <select id="estilo" class="w-full p-4 border rounded-xl bg-gray-50 font-bold mb-4">
                     <option value="standard">Standard Execution</option>
                     <option value="premium">Premium Experience</option>
                 </select>
-                <button onclick="generar()" class="bg-blue-700 text-white w-full py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-blue-800 transition-all shadow-md">Diseñar Itinerario</button>
+                <button onclick="generar()" class="bg-blue-700 text-white w-full py-5 rounded-xl font-black text-xs uppercase tracking-[0.2em] hover:bg-blue-800 transition-all">Diseñar Itinerario</button>
             </div>
 
-            <div class="bg-blue-800 text-white p-8 rounded-[2rem] shadow-2xl">
+            <div class="bg-blue-800 text-white p-8 rounded-[2rem] shadow-2xl relative overflow-hidden">
                 <h4 class="font-bold text-xs mb-3 border-b border-blue-400 pb-1 uppercase tracking-widest">Estatus Legal</h4>
-                <p id="req" class="text-xs leading-relaxed opacity-90 font-light italic">Esperando datos de destino...</p>
+                <p id="req" class="text-xs leading-relaxed opacity-90 font-light italic">Sincronizando trámites consulares...</p>
             </div>
         </section>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <a id="l-booking" target="_blank" class="bg-white/95 p-5 rounded-2xl flex items-center justify-between shadow-sm hover:scale-[1.02] transition-transform">
-                <span class="font-bold text-blue-900 text-xs uppercase">➔ Booking.com</span>
-                <span class="text-[9px] text-gray-400 font-bold">VIP DEALS</span>
+            <a id="l-booking" target="_blank" class="bg-white p-5 rounded-2xl flex items-center justify-between shadow hover:bg-blue-50 transition-all">
+                <span class="font-bold text-blue-900 text-xs uppercase tracking-tighter">➔ Booking.com VIP Deall</span>
             </a>
-            <a id="l-airbnb" target="_blank" class="bg-white/95 p-5 rounded-2xl flex items-center justify-between shadow-sm hover:scale-[1.02] transition-transform">
-                <span class="font-bold text-rose-700 text-xs uppercase">🏠 Airbnb Residences</span>
-                <span class="text-[9px] text-gray-400 font-bold">LUXURY</span>
+            <a id="l-airbnb" target="_blank" class="bg-white p-5 rounded-2xl flex items-center justify-between shadow hover:bg-rose-50 transition-all">
+                <span class="font-bold text-rose-700 text-xs uppercase tracking-tighter">🏠 Airbnb Luxury residences</span>
             </a>
-            <a id="l-autos" target="_blank" class="bg-white/95 p-5 rounded-2xl flex items-center justify-between shadow-sm hover:scale-[1.02] transition-transform">
-                <span class="font-bold text-emerald-700 text-xs uppercase">🚗 RentalCars</span>
-                <span class="text-[9px] text-gray-400 font-bold">PREMIUM</span>
+            <a id="l-autos" target="_blank" class="bg-white p-5 rounded-2xl flex items-center justify-between shadow hover:bg-emerald-50 transition-all">
+                <span class="font-bold text-emerald-700 text-xs uppercase tracking-tighter">🚗 RentalCars Premium</span>
             </a>
         </div>
 
-        <div id="load" class="hidden text-center text-blue-900 font-bold animate-pulse py-10 uppercase tracking-[0.4em]">Sincronizando con Servidores Globales...</div>
+        <div id="load" class="hidden text-center text-white font-bold animate-pulse py-10 tracking-[0.5em]">CONSULTANDO SERVIDORES GLOBALES...</div>
 
         <div id="res" class="hidden space-y-8">
-            <div id="b" class="glass-panel p-8 italic text-gray-700 text-center text-lg border-none shadow-md"></div>
-            <div id="lista-puntos" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+            <div id="b" class="glass-panel p-8 text-center text-gray-700 italic border-none shadow-md"></div>
+            <div id="lista-puntos" class="grid grid-cols-1 md:grid-cols-3 gap-8 pb-20"></div>
         </div>
     </main>
 
@@ -91,10 +83,10 @@
                 estilo: document.getElementById('estilo').value,
                 idioma: document.getElementById('idioma').value
             };
-            if(!params.destino) return;
+            if(!params.destino) return alert("Indique el destino");
 
-            document.getElementById('res').classList.add('hidden');
             document.getElementById('load').classList.remove('hidden');
+            document.getElementById('res').classList.add('hidden');
 
             try {
                 const r = await fetch('/api/generate', {
@@ -107,44 +99,42 @@
                 document.getElementById('b').innerText = d.b;
                 document.getElementById('req').innerText = d.requisitos;
 
-                // Configuración de IDs de Afiliado (Cambiar 'AID' por tu ID real)
-                const AID = "TU_ID_REAL";
+                const AID = "TU_ID_AQUÍ"; // Tu ID de afiliado
                 document.getElementById('l-booking').href = `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(params.destino)}&aid=${AID}`;
                 document.getElementById('l-airbnb').href = `https://www.airbnb.com/s/${encodeURIComponent(params.destino)}/homes`;
-                document.getElementById('l-autos').href = `https://www.rentalcars.com/search-results?locationName=${encodeURIComponent(params.destino)}&affiliateCode=${AID}`;
+                document.getElementById('l-autos').href = `https://www.rentalcars.com/search-results?locationName=${encodeURIComponent(params.destino)}`;
 
                 const list = document.getElementById('lista-puntos');
                 list.innerHTML = "";
                 
                 d.puntos.forEach(p => {
-                    // MOTOR DE IMÁGENES: Usamos la URL directa de Unsplash Source (Mucho más estable)
-                    const fotoUrl = `https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=60`; 
-                    // Nota: En producción, para que sea 100% exacto al lugar, se usa:
-                    const fotoDinamica = `https://source.unsplash.com/featured/800x600?${encodeURIComponent(p.n + "," + params.destino)}`;
+                    // SOLUCIÓN DEFINITIVA DE IMAGEN: Buscador integrado
+                    const fotoUrl = `https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80`; // Imagen base si falla
+                    const fotoDinamica = `https://source.unsplash.com/800x600/?${encodeURIComponent(p.img_keyword || p.n)}`;
 
                     list.innerHTML += `
                         <div class="card-point shadow-lg">
-                            <div class="h-52 relative overflow-hidden bg-gray-200">
-                                <img src="${fotoDinamica}" class="w-full h-full object-cover" 
-                                     onload="this.style.opacity='1'" 
-                                     style="opacity:0; transition: opacity 0.5s;">
+                            <div class="h-52 relative">
+                                <img src="${fotoDinamica}" 
+                                     class="w-full h-full object-cover" 
+                                     onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800'">
                                 <div class="absolute top-4 right-4 bg-white/95 px-3 py-1 rounded-full text-[10px] font-black text-blue-700 shadow-md">
                                     ${p.p}
                                 </div>
                             </div>
-                            <div class="p-8 flex flex-col flex-grow">
-                                <h4 class="font-extrabold text-lg mb-2 uppercase tracking-tight text-slate-800">${p.n}</h4>
-                                <p class="text-[11px] text-gray-500 italic mb-6 leading-relaxed flex-grow">"${p.s}"</p>
+                            <div class="p-6 flex flex-col flex-grow">
+                                <h4 class="font-extrabold text-base mb-2 uppercase tracking-tight text-slate-800">${p.n}</h4>
+                                <p class="text-[10px] text-gray-500 italic mb-6 leading-relaxed flex-grow">"${p.s}"</p>
                                 
                                 <div class="space-y-3 mt-auto">
                                     <a href="https://www.getyourguide.com/s?q=${encodeURIComponent(p.n)}&customer_id=${AID}" target="_blank" 
-                                       class="block w-full text-center bg-blue-700 text-white py-3.5 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg hover:bg-blue-800">Reservar Tickets</a>
+                                       class="block w-full text-center bg-blue-700 text-white py-3.5 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg">Reservar Experiencia</a>
                                     
-                                    <div class="grid grid-cols-2 gap-3">
+                                    <div class="grid grid-cols-2 gap-2">
                                         <a href="https://www.google.com/search?q=${encodeURIComponent(p.n + ' official tickets')}&btnI" target="_blank" 
-                                           class="bg-gray-100 text-gray-600 text-center py-2.5 rounded-lg text-[9px] font-bold uppercase hover:bg-gray-200">Sitio Oficial</a>
+                                           class="bg-gray-100 text-gray-600 text-center py-2.5 rounded-lg text-[9px] font-bold uppercase">Sitio Oficial</a>
                                         <a href="https://www.google.com/maps/search/${encodeURIComponent(p.n + ' ' + params.destino)}" target="_blank" 
-                                           class="bg-gray-100 text-gray-600 text-center py-2.5 rounded-lg text-[9px] font-bold uppercase hover:bg-gray-200">Mapa</a>
+                                           class="bg-gray-100 text-gray-600 text-center py-2.5 rounded-lg text-[9px] font-bold uppercase">Mapa</a>
                                     </div>
                                 </div>
                             </div>
@@ -156,7 +146,7 @@
                 document.getElementById('res').classList.remove('hidden');
             } catch (e) { 
                 document.getElementById('load').classList.add('hidden');
-                alert("Error de conexión con la IA"); 
+                alert("Error de conexión"); 
             }
         }
     </script>

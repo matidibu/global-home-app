@@ -14,30 +14,38 @@ def home():
 def generate():
     try:
         data = request.json
-        dest = data.get('destino').title()
-        nac = data.get('nacionalidad').title()
+        dest = data.get('destino', '').title()
+        nac = data.get('nacionalidad', '').title()
         idioma = data.get('idioma', 'Español')
         estilo = data.get('estilo', 'standard')
 
         prompt = f"""
-        Concierge VIP. Idioma: {idioma}. Destino: {dest}. Viajero: {nac}. Estilo: {estilo.upper()}.
-        REQUISITOS: Ortografía perfecta. Nombres propios con Mayúscula. 
-        Costos en USD y EUR.
+        Actúa como un Concierge VIP de élite. Genera una guía en {idioma}.
+        Destino: {dest}. Viajero de: {nac}. Nivel: {estilo.upper()}.
         
-        Responde en JSON:
+        IMPORTANTE: 
+        1. Ortografía perfecta y mayúsculas en nombres.
+        2. Precios en USD y EUR (ej: 40 USD / 37 EUR).
+        3. El campo 'img_keyword' debe ser el nombre del lugar en INGLÉS para el buscador.
+        
+        Responde estrictamente en JSON:
         {{
-            "b": "Bienvenida elegante",
+            "b": "Bienvenida sofisticada",
             "requisitos": "Visas y salud para {nac} en {dest}",
             "puntos": [
                 {{
                     "n": "Nombre Del Lugar",
+                    "h": "Horarios",
                     "p": "XX USD / XX EUR",
-                    "s": "Tip experto"
+                    "t": "Transporte sugerido",
+                    "s": "Tip experto",
+                    "img_keyword": "Eiffel Tower"
                 }}
             ]
         }}
-        Genera 5 puntos.
+        Genera exactamente 5 puntos.
         """
+
         completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[{"role": "user", "content": prompt}],
