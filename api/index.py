@@ -7,6 +7,7 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 template_dir = os.path.join(base_dir, '..', 'templates')
 
 app = Flask(__name__, template_folder=template_dir)
+client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 @app.route('/')
 def home():
@@ -15,29 +16,29 @@ def home():
 @app.route('/api/generate', methods=['POST'])
 def generate():
     try:
-        # Recuperamos la clave de las variables de entorno de Vercel
-        key = os.environ.get("GROQ_API_KEY")
-        if not key:
-            return jsonify({"error": "No se encontró la GROQ_API_KEY en Vercel"}), 500
-
-        client = Groq(api_key=key)
         data = request.json
         dest = data.get('destino', 'Madrid')
         nac = data.get('nacionalidad', 'Argentino')
         
-        # Prompt super simplificado para evitar errores de la IA
-        system_prompt = f"Eres un concierge. Responde solo en JSON con llaves 'b' (bienvenida), 'p' (lista de 3 imperdibles), 'e' (consejo seguridad para {nac} en {dest})."
+        # Le pedimos a la IA toda la data que tenía el Streamlit
+        prompt = f"""
+        Actúa como guía experto. Para un {nac} en {dest}, responde SOLO un JSON con:
+        'b': saludo,
+        'clima': breve descripción del clima actual/típico,
+        'consulado': dirección o contacto del consulado de {nac} en {dest},
+        'hospital': nombre del hospital principal recomendado,
+        'p': lista de 3 imperdibles,
+        'e': protocolo de emergencia.
+        """
 
         completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
-            messages=[{"role": "user", "content": system_prompt}],
-            response_format={"type": "json_object"},
-            temperature=0.1
+            messages=[{"role": "user", "content": prompt}],
+            response_format={"type": "json_object"}
         )
         
         return jsonify(json.loads(completion.choices[0].message.content))
     except Exception as e:
-        # Esto nos va a decir el error real en la alerta de la página
         return jsonify({"error": str(e)}), 500
 
 app = app
