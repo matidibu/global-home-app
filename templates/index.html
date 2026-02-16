@@ -11,57 +11,59 @@
     </style>
 </head>
 <body class="bg-slate-100 font-sans text-slate-900">
-    <header class="bg-indigo-900 text-white py-12 px-6 text-center shadow-lg">
-        <h1 class="text-3xl font-bold tracking-tight uppercase">Global Home Assist</h1>
-        <p class="text-indigo-300 mt-2 text-lg italic">Tu concierge inteligente</p>
+    <header class="bg-indigo-950 text-white py-12 px-6 text-center shadow-xl">
+        <h1 class="text-3xl font-black tracking-tighter uppercase">Global Home Assist</h1>
+        <p class="text-indigo-400 mt-2 font-medium">Asistencia Inteligente para tu Viaje</p>
     </header>
 
-    <main class="max-w-xl mx-auto -mt-8 p-4 pb-24">
-        <div class="bg-white rounded-3xl shadow-2xl p-6 border border-slate-200">
-            <div class="space-y-3">
-                <input type="text" id="nacionalidad" placeholder="Tu nacionalidad" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500">
-                <input type="text" id="destino" placeholder="Ciudad de destino" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500">
-                <button onclick="generarAsistencia()" id="btn-enviar" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-2xl transition-all shadow-lg active:scale-95">
-                    PLANIFICAR MI VIAJE
+    <main class="max-w-xl mx-auto -mt-10 p-4 pb-24">
+        <div class="bg-white rounded-[2rem] shadow-2xl p-8 border border-slate-200">
+            <div id="form-container" class="space-y-4">
+                <input type="text" id="nacionalidad" placeholder="¿De dónde sos? (ej: Argentino)" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-600">
+                <input type="text" id="destino" placeholder="¿A dónde vas? (ej: Roma)" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-600">
+                <button onclick="generarAsistencia()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-5 rounded-2xl transition-all shadow-lg active:scale-95 uppercase tracking-widest">
+                    Planificar mi viaje
                 </button>
             </div>
 
-            <div id="loader" class="hidden mt-8 text-center text-indigo-600 font-medium loading-dots">
-                Conectando con guías en destino
+            <div id="loader" class="hidden py-12 text-center text-indigo-600 font-bold loading-dots">
+                Buscando mejores opciones
             </div>
 
-            <div id="resultado" class="hidden mt-8 space-y-6">
-                <div class="p-5 bg-indigo-50 rounded-2xl border-l-4 border-indigo-500">
-                    <p id="bienvenida" class="text-slate-700 italic font-medium"></p>
+            <div id="resultado" class="hidden mt-8 space-y-8 animate-fade-in">
+                
+                <div class="bg-indigo-50 p-6 rounded-2xl border-l-4 border-indigo-600">
+                    <p id="bienvenida" class="text-slate-800 font-medium italic"></p>
                 </div>
 
                 <div class="grid grid-cols-3 gap-3">
-                    <a id="link-hotel" target="_blank" class="bg-white p-4 rounded-2xl border border-slate-200 text-center shadow-sm hover:bg-slate-50">
-                        <span class="block text-2xl mb-1">🏨</span>
-                        <span class="text-[10px] font-bold text-slate-500 uppercase">Hotel</span>
+                    <a id="link-hospedaje" target="_blank" class="bg-white border border-slate-200 p-4 rounded-2xl text-center shadow-sm hover:shadow-md transition-shadow">
+                        <span class="block text-3xl">🏨</span>
+                        <span class="text-[10px] font-black text-slate-400 uppercase">Hotel</span>
                     </a>
-                    <a id="link-auto" target="_blank" class="bg-white p-4 rounded-2xl border border-slate-200 text-center shadow-sm hover:bg-slate-50">
-                        <span class="block text-2xl mb-1">🚗</span>
-                        <span class="text-[10px] font-bold text-slate-500 uppercase">Auto</span>
+                    <a id="link-autos" target="_blank" class="bg-white border border-slate-200 p-4 rounded-2xl text-center shadow-sm hover:shadow-md transition-shadow">
+                        <span class="block text-3xl">🚗</span>
+                        <span class="text-[10px] font-black text-slate-400 uppercase">Auto</span>
                     </a>
-                    <a id="link-tickets" target="_blank" class="bg-white p-4 rounded-2xl border border-slate-200 text-center shadow-sm hover:bg-slate-50">
-                        <span class="block text-2xl mb-1">🎟️</span>
-                        <span class="text-[10px] font-bold text-slate-500 uppercase">Tickets</span>
+                    <a id="link-tickets" target="_blank" class="bg-white border border-slate-200 p-4 rounded-2xl text-center shadow-sm hover:shadow-md transition-shadow">
+                        <span class="block text-3xl">🎟️</span>
+                        <span class="text-[10px] font-black text-slate-400 uppercase">Tickets</span>
                     </a>
                 </div>
 
-                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200">
-                    <h3 class="font-bold text-slate-800 mb-3 text-xs uppercase tracking-widest">📍 Lugares Imperdibles</h3>
-                    <ul id="puntos" class="space-y-2 text-sm text-slate-600"></ul>
+                <div>
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">📍 Imperdibles</h3>
+                    <ul id="puntos" class="space-y-3 text-slate-700 font-medium"></ul>
                 </div>
 
-                <div class="p-5 bg-red-50 rounded-2xl border border-red-100">
-                    <h4 class="font-bold text-red-700 text-xs mb-2 uppercase">🆘 Seguridad Consular</h4>
+                <div class="bg-red-50 p-6 rounded-2xl border border-red-100">
+                    <h4 class="text-red-700 font-black text-xs uppercase mb-2">🆘 Protocolo de Seguridad</h4>
                     <p id="emergencia" class="text-xs text-slate-600 leading-relaxed"></p>
                 </div>
 
-                <button onclick="enviarWhatsApp()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-2xl transition-all shadow-md flex items-center justify-center gap-2">
-                    <span>📱</span> ENVIAR A MI WHATSAPP
+                <button onclick="enviarWhatsApp()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-2xl shadow-lg flex items-center justify-center gap-3 transition-transform active:scale-95">
+                    <span>Enviar itinerario a mi WhatsApp</span>
+                    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.588-5.946 0-6.556 5.332-11.888 11.888-11.888 3.176 0 6.161 1.237 8.404 3.48s3.481 5.229 3.481 8.406c0 6.555-5.332 11.887-11.891 11.887-2.007 0-3.974-.506-5.717-1.47l-6.264 1.644zm6.186-4.223l.369.219c1.455.863 3.111 1.319 4.811 1.319 5.232 0 9.488-4.257 9.488-9.489 0-2.536-1-4.92-2.817-6.737-1.817-1.817-4.201-2.817-6.737-2.817-5.23 0-9.488 4.258-9.488 9.49 0 1.83.523 3.618 1.512 5.163l.241.378-1.001 3.65 3.734-.979z"/></svg>
                 </button>
             </div>
         </div>
@@ -89,42 +91,32 @@
                 });
                 datosActuales = await response.json();
 
-                if(datosActuales.error) throw new Error(datosActuales.error);
-
                 document.getElementById('bienvenida').innerText = datosActuales.bienvenida;
                 document.getElementById('emergencia').innerText = datosActuales.emergencia;
-                
-                document.getElementById('link-hotel').href = datosActuales.hospedaje_url;
-                document.getElementById('link-auto').href = datosActuales.autos_url;
-                document.getElementById('link-tickets').href = datosActuales.tickets_url;
+                document.getElementById('link-hospedaje').href = datosActuales.hospedaje;
+                document.getElementById('link-autos').href = datosActuales.autos;
+                document.getElementById('link-tickets').href = datosActuales.tickets;
 
                 const lista = document.getElementById('puntos');
                 lista.innerHTML = "";
-                datosActuales.puntos_interes.forEach(item => {
-                    lista.innerHTML += `<li>• ${item}</li>`;
+                datosActuales.puntos.forEach(p => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<span class="text-indigo-600 mr-2">✔</span> ${p}`;
+                    lista.appendChild(li);
                 });
 
                 loader.classList.add('hidden');
                 resDiv.classList.remove('hidden');
-            } catch (error) {
-                alert("La IA está tardando. Prueba una vez más.");
+            } catch (e) {
+                alert("La IA está descansando. Intenta de nuevo.");
                 loader.classList.add('hidden');
             }
         }
 
         function enviarWhatsApp() {
             if(!datosActuales) return;
-            const mensaje = `*Global Home Assist - Mi Viaje*%0A%0A` +
-                            `📍 *Destino:* ${document.getElementById('destino').value}%0A` +
-                            `✨ *Bienvenida:* ${datosActuales.bienvenida}%0A` +
-                            `🏛️ *Imperdibles:* ${datosActuales.puntos_interes.join(", ")}%0A` +
-                            `🆘 *Emergencia:* ${datosActuales.emergencia}%0A%0A` +
-                            `*Links útiles:*%0A` +
-                            `🏨 Hotel: ${datosActuales.hospedaje_url}%0A` +
-                            `🚗 Auto: ${datosActuales.autos_url}%0A` +
-                            `🎟️ Tickets: ${datosActuales.tickets_url}`;
-            
-            window.open(`https://wa.me/?text=${mensaje}`, '_blank');
+            const texto = `*GLOBAL HOME ASSIST - Tu Itinerario*%0A%0A🏠 ${datosActuales.bienvenida}%0A%0A📍 *Imperdibles:*%0A- ${datosActuales.puntos.join('%0A- ')}%0A%0A🆘 *Seguridad:* ${datosActuales.emergencia}%0A%0A🏨 *Hotel:* ${datosActuales.hospedaje}`;
+            window.open(`https://wa.me/?text=${texto}`, '_blank');
         }
     </script>
 </body>
