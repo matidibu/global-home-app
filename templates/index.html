@@ -5,46 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Global Home Assist</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .loading:after { content: '...'; animation: dots 1s infinite; }
-        @keyframes dots { 0%, 20% { content: '.'; } 40% { content: '..'; } 60% { content: '...'; } 80%, 100% { content: ''; } }
-    </style>
 </head>
-<body class="bg-slate-100 font-sans">
-    <header class="bg-indigo-950 text-white py-10 text-center shadow-lg">
-        <h1 class="text-2xl font-black uppercase">Global Home Assist</h1>
+<body class="bg-slate-100 font-sans text-slate-900">
+    <header class="bg-indigo-950 text-white py-10 text-center">
+        <h1 class="text-2xl font-black uppercase tracking-tighter">Global Home Assist</h1>
     </header>
 
-    <main class="max-w-lg mx-auto -mt-6 p-4">
-        <div class="bg-white rounded-3xl shadow-xl p-6 border border-slate-200">
+    <main class="max-w-md mx-auto -mt-6 p-4 pb-20">
+        <div class="bg-white rounded-3xl shadow-2xl p-6 border border-slate-200">
             <div id="form" class="space-y-3">
                 <input type="text" id="nac" placeholder="Nacionalidad" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-indigo-600">
                 <input type="text" id="dest" placeholder="Destino" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-indigo-600">
-                <button onclick="generar()" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 uppercase">Planificar</button>
+                <button onclick="generar()" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 uppercase">Planificar Ahora</button>
             </div>
 
-            <div id="load" class="hidden py-10 text-center text-indigo-600 font-bold loading">Buscando</div>
+            <div id="load" class="hidden py-10 text-center text-indigo-600 font-bold">Cargando datos...</div>
 
             <div id="res" class="hidden mt-6 space-y-6">
-                <div class="p-4 bg-indigo-50 rounded-xl border-l-4 border-indigo-600 italic" id="b"></div>
+                <div class="p-4 bg-indigo-50 rounded-xl border-l-4 border-indigo-600 italic text-sm" id="b"></div>
                 
                 <div class="grid grid-cols-3 gap-2">
-                    <a id="h" target="_blank" class="bg-white border p-3 rounded-xl text-center text-xl">🏨</a>
-                    <a id="a" target="_blank" class="bg-white border p-3 rounded-xl text-center text-xl">🚗</a>
-                    <a id="t" target="_blank" class="bg-white border p-3 rounded-xl text-center text-xl">🎟️</a>
+                    <a id="h" target="_blank" class="bg-white border p-4 rounded-xl text-center text-2xl shadow-sm">🏨</a>
+                    <a id="a" target="_blank" class="bg-white border p-4 rounded-xl text-center text-2xl shadow-sm">🚗</a>
+                    <a id="t" target="_blank" class="bg-white border p-4 rounded-xl text-center text-2xl shadow-sm">🎟️</a>
                 </div>
 
-                <div class="p-4 bg-white border rounded-xl shadow-sm">
+                <div class="p-4 bg-white border rounded-xl">
                     <p class="text-[10px] font-bold text-slate-400 mb-2 uppercase">Imperdibles</p>
-                    <ul id="p" class="text-sm space-y-1 text-slate-600 font-medium"></ul>
+                    <ul id="p" class="text-sm space-y-2 text-slate-700"></ul>
                 </div>
 
                 <div class="p-4 bg-red-50 rounded-xl border border-red-100">
-                    <p class="text-[10px] font-bold text-red-700 mb-1 uppercase text-xs">Seguridad</p>
-                    <p id="e" class="text-[11px] text-slate-600"></p>
+                    <p class="text-[10px] font-bold text-red-700 mb-1 uppercase">Seguridad</p>
+                    <p id="e" class="text-xs text-slate-600"></p>
                 </div>
 
-                <button onclick="compartir()" class="w-full bg-green-500 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2">
+                <button onclick="compartir()" class="w-full bg-green-500 text-white font-bold py-4 rounded-2xl shadow-lg flex items-center justify-center gap-2">
                     Enviar a WhatsApp
                 </button>
             </div>
@@ -52,12 +48,15 @@
     </main>
 
     <script>
-        let d = null;
+        let resData = null;
+        let destinoFinal = "";
+
         async function generar() {
             const n = document.getElementById('nac').value;
             const t = document.getElementById('dest').value;
-            if(!n || !t) return alert("Faltan datos");
+            if(!n || !t) return alert("Completa los datos");
 
+            destinoFinal = t;
             document.getElementById('res').classList.add('hidden');
             document.getElementById('load').classList.remove('hidden');
 
@@ -67,29 +66,31 @@
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({nacionalidad: n, destino: t})
                 });
-                d = await r.json();
+                resData = await r.json();
 
-                document.getElementById('b').innerText = d.b;
-                document.getElementById('e').innerText = d.e;
-                document.getElementById('h').href = d.h;
-                document.getElementById('a').href = d.a;
-                document.getElementById('t').href = d.t;
-
+                // 1. Llenamos texto de la IA
+                document.getElementById('b').innerText = resData.b;
+                document.getElementById('e').innerText = resData.e;
                 const l = document.getElementById('p');
                 l.innerHTML = "";
-                d.p.forEach(x => { l.innerHTML += `<li>• ${x}</li>`; });
+                resData.p.forEach(x => { l.innerHTML += `<li>• ${x}</li>`; });
+
+                // 2. GENERAMOS LOS LINKS AL INSTANTE (Sin esperar a la IA)
+                document.getElementById('h').href = `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(t)}`;
+                document.getElementById('a').href = `https://www.rentalcars.com/search-results?locationName=${encodeURIComponent(t)}`;
+                document.getElementById('t').href = `https://www.civitatis.com/es/buscar/?q=${encodeURIComponent(t)}`;
 
                 document.getElementById('load').classList.add('hidden');
                 document.getElementById('res').classList.remove('hidden');
             } catch (err) {
-                alert("Error de conexión. Intenta de nuevo.");
+                alert("La conexión falló. Por favor intenta una vez más.");
                 document.getElementById('load').classList.add('hidden');
             }
         }
 
         function compartir() {
-            if(!d) return;
-            const txt = `*Global Home Assist*%0A🏠 ${d.b}%0A📍 Imperdibles: ${d.p.join(', ')}%0A🆘 Seguridad: ${d.e}`;
+            if(!resData) return;
+            const txt = `*Global Home Assist*%0A🏠 ${resData.b}%0A📍 Destino: ${destinoFinal}%0A🆘 Seguridad: ${resData.e}`;
             window.open(`https://wa.me/?text=${txt}`, '_blank');
         }
     </script>
