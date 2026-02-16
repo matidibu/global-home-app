@@ -4,36 +4,16 @@ from flask import Flask, render_template, request, jsonify
 from groq import Groq
 from supabase import create_client
 
-# Configuración de rutas para Vercel
 base_dir = os.path.dirname(os.path.abspath(__file__))
 template_dir = os.path.join(base_dir, '..', 'templates')
 
 app = Flask(__name__, template_folder=template_dir)
 
-def get_ai_response(nacionalidad, destino):
-    try:
-        api_key = os.environ.get("GROQ_API_KEY")
-        
-        if not api_key:
-            return {"error": "Falta la llave GROQ_API_KEY en Vercel"}
-
-        client = Groq(api_key=api_key)
-        
-        # ACTUALIZACIÓN: Usamos el modelo llama-3.3-70b-versatile (actualizado a 2026)
-        system_prompt = f"""
-        Eres 'Global Home Assist'. El usuario es de {nacionalidad} y viaja a {destino}.
-        Responde en JSON con estas llaves exactas: 'bienvenida', 'pasos_pasaporte', 'emergencias', 'consejo_hogar'.
-        Tono: Contenedor y profesional.
-        """
-
-        completion = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            messages=[{"role": "system", "content": system_prompt}],
-            response_format={"type": "json_object"}
-        )
-        return json.loads(completion.choices[0].message.content)
-    except Exception as e:
-        return {"error": str(e)}
+try:
+    supabase = create_client(os.getenv("SUPABASE_URL", ""), os.getenv("SUPABASE_KEY", ""))
+    client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+except Exception as e:
+    print(f"Error: {e}")
 
 @app.route('/')
 def home():
@@ -43,18 +23,31 @@ def home():
 def generate():
     try:
         data = request.json
-        nacionalidad = data.get('nacionalidad', 'Viajero')
-        destino = data.get('destino', 'el mundo')
+        destino = data.get('destino', 'Madrid')
+        nacionalidad = data.get('nacionalidad', 'Argentino')
         
-        resultado = get_ai_response(nacionalidad, destino)
+        system_prompt = f"""
+        Eres el Concierge Pro de 'Global Home Assist'. El usuario ({nacionalidad}) viaja a {destino}.
+        Tu respuesta debe ser un JSON estricto con:
+        1. 'bienvenida': Saludo cálido.
+        2. 'puntos_interes': Lista de 3 lugares imperdibles.
+        3. 'links': Un objeto con URLs de búsqueda REALES para:
+           - 'hospedaje': (Booking.com o Airbnb con el destino)
+           - 'autos': (Rentalcars o similar)
+           - 'entradas': (Civitatis o GetYourGuide con el destino)
+        4. 'emergencia': Pasos para el pasaporte.
         
-        if "error" in resultado:
-            print(f"Error detectado: {resultado['error']}")
-            return jsonify(resultado), 500
+        IMPORTANTE: Devuelve solo el JSON con estas llaves: 'bienvenida', 'puntos_interes', 'links', 'emergencia'.
+        """
+
+        completion = client.chat.completions.create(
+            model="llama3-8b-8192",
+            messages=[{"role": "system", "content": system_prompt}],
+            response_format={"type": "json_object"}
+        )
         
-        return jsonify(resultado)
+        return jsonify(json.loads(completion.choices[0].message.content))
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# Exportar para Vercel
 app = app

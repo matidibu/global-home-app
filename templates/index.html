@@ -3,51 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Home Assist | El mundo es tu lugar</title>
+    <title>Global Home Assist | Tu Concierge Digital</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .loading-dots:after { content: ' .'; animation: dots 1s steps(5, end) infinite; }
         @keyframes dots { 0%, 20% { content: ' .'; } 40% { content: ' ..'; } 60% { content: ' ...'; } 80%, 100% { content: ''; } }
-        .animate-fade-in { animation: fadeIn 0.5s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .card-shadow { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); }
     </style>
 </head>
-<body class="bg-slate-50 font-sans text-slate-900">
-    <header class="bg-slate-900 text-white py-12 px-6 text-center shadow-lg">
-        <h1 class="text-4xl font-bold tracking-tight uppercase">Global Home Assist</h1>
-        <p class="text-blue-300 mt-2 text-lg italic italic">El mundo es tu lugar</p>
+<body class="bg-slate-100 font-sans">
+    <header class="bg-indigo-700 text-white py-10 px-6 text-center shadow-md">
+        <h1 class="text-3xl font-extrabold uppercase tracking-widest">Global Home Assist</h1>
+        <p class="text-indigo-200 mt-1 font-light">Tu viaje, bajo control.</p>
     </header>
 
-    <main class="max-w-2xl mx-auto -mt-8 p-4">
-        <div class="bg-white rounded-3xl shadow-2xl p-8 border border-slate-100">
-            <div class="space-y-4">
-                <input type="text" id="nacionalidad" placeholder="Tu nacionalidad (ej: Argentino)" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500">
-                <input type="text" id="destino" placeholder="¿A qué ciudad viajas? (ej: Madrid)" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500">
-                <button onclick="generarAsistencia()" id="btn-enviar" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl transition-all shadow-lg active:scale-95">
-                    SENTIRME EN CASA
+    <main class="max-w-2xl mx-auto -mt-6 p-4 pb-20">
+        <div class="bg-white rounded-2xl p-6 mb-6 card-shadow border border-slate-200">
+            <div class="grid grid-cols-1 gap-3">
+                <input type="text" id="nacionalidad" placeholder="Nacionalidad" class="p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500">
+                <input type="text" id="destino" placeholder="Ciudad de destino" class="p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500">
+                <button onclick="generarAsistencia()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition-all shadow-md active:scale-95">
+                    PLANIFICAR MI LLEGADA
                 </button>
             </div>
+        </div>
 
-            <div id="resultado" class="hidden mt-8 space-y-6 animate-fade-in">
-                <div class="p-6 bg-blue-50 rounded-2xl border-l-4 border-blue-500">
-                    <h3 class="font-bold text-blue-800 mb-2">Tu Asistente dice:</h3>
-                    <p id="bienvenida" class="text-slate-700 italic"></p>
-                </div>
-                
-                <div class="grid gap-4">
-                    <div class="p-4 bg-red-50 rounded-xl border border-red-100">
-                        <h4 class="font-bold text-red-700">🆘 En caso de pérdida de documentos:</h4>
-                        <p id="pasos" class="text-sm mt-1 text-slate-600"></p>
-                    </div>
-                    <div class="p-4 bg-green-50 rounded-xl border border-green-100">
-                        <h4 class="font-bold text-green-700">🏠 Sentite como en casa:</h4>
-                        <p id="consejo" class="text-sm mt-1 text-slate-600"></p>
-                    </div>
-                </div>
+        <div id="loader" class="hidden text-center py-10 text-indigo-600 font-bold loading-dots">
+            Conectando con guías locales
+        </div>
+
+        <div id="resultado" class="hidden space-y-6 animate-fade-in">
+            <div class="bg-indigo-50 p-5 rounded-2xl border-l-4 border-indigo-500">
+                <p id="bienvenida" class="text-indigo-900 font-medium"></p>
             </div>
 
-            <div id="loader" class="hidden mt-8 text-center text-blue-600 font-medium loading-dots">
-                Preparando tu llegada
+            <div class="grid grid-cols-3 gap-2">
+                <a id="link-hospedaje" target="_blank" class="bg-white p-3 rounded-xl border border-slate-200 text-center hover:bg-slate-50 transition-colors shadow-sm">
+                    <span class="block text-xl">🏨</span>
+                    <span class="text-[10px] font-bold uppercase text-slate-500">Hotel</span>
+                </a>
+                <a id="link-autos" target="_blank" class="bg-white p-3 rounded-xl border border-slate-200 text-center hover:bg-slate-50 transition-colors shadow-sm">
+                    <span class="block text-xl">🚗</span>
+                    <span class="text-[10px] font-bold uppercase text-slate-500">Autos</span>
+                </a>
+                <a id="link-entradas" target="_blank" class="bg-white p-3 rounded-xl border border-slate-200 text-center hover:bg-slate-50 transition-colors shadow-sm">
+                    <span class="block text-xl">🎟️</span>
+                    <span class="text-[10px] font-bold uppercase text-slate-500">Tickets</span>
+                </a>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl card-shadow border border-slate-100">
+                <h3 class="font-bold text-slate-800 mb-3 flex items-center">
+                    📍 Imperdibles
+                </h3>
+                <ul id="puntos" class="space-y-2 text-slate-600 text-sm italic"></ul>
+            </div>
+
+            <div class="bg-red-50 p-6 rounded-2xl border border-red-100">
+                <h3 class="font-bold text-red-700 mb-1 flex items-center">🆘 Asistencia Consular</h3>
+                <p id="emergencia" class="text-xs text-red-600 leading-relaxed"></p>
             </div>
         </div>
     </main>
@@ -58,11 +72,8 @@
             const dest = document.getElementById('destino').value;
             const resDiv = document.getElementById('resultado');
             const loader = document.getElementById('loader');
-            
-            if(!nac || !dest) {
-                alert("Por favor, completa ambos campos.");
-                return;
-            }
+
+            if(!nac || !dest) return alert("Faltan datos.");
 
             resDiv.classList.add('hidden');
             loader.classList.remove('hidden');
@@ -73,23 +84,28 @@
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({nacionalidad: nac, destino: dest})
                 });
-                
-                if (!response.ok) {
-                    throw new Error('Error en la respuesta del servidor');
-                }
-
                 const data = await response.json();
 
-                // Validamos que los datos existan para evitar el "undefined"
-                document.getElementById('bienvenida').innerText = data.bienvenida || "Bienvenido viajero. Estamos procesando tu solicitud.";
-                document.getElementById('pasos').innerText = data.pasos_pasaporte || "Contacta al consulado más cercano de tu país en la ciudad de destino.";
-                document.getElementById('consejo').innerText = data.consejo_hogar || "Disfruta el viaje, estamos para cuidarte.";
+                // Llenar datos
+                document.getElementById('bienvenida').innerText = data.bienvenida;
+                document.getElementById('emergencia').innerText = data.emergencia;
+                
+                // Llenar lista de puntos
+                const listaPuntos = document.getElementById('puntos');
+                listaPuntos.innerHTML = "";
+                data.puntos_interes.forEach(p => {
+                    listaPuntos.innerHTML += `<li>• ${p}</li>`;
+                });
+
+                // Configurar Links
+                document.getElementById('link-hospedaje').href = data.links.hospedaje;
+                document.getElementById('link-autos').href = data.links.autos;
+                document.getElementById('link-entradas').href = data.links.entradas;
 
                 loader.classList.add('hidden');
                 resDiv.classList.remove('hidden');
-            } catch (error) {
-                console.error('Error:', error);
-                alert("Hubo un problema al conectar con el servidor. Verifica tus claves API en Vercel.");
+            } catch (e) {
+                alert("Error al obtener datos.");
                 loader.classList.add('hidden');
             }
         }
