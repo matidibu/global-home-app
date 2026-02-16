@@ -4,6 +4,8 @@ from flask import Flask, render_template, request, jsonify
 from groq import Groq
 
 app = Flask(__name__, template_folder='../templates')
+
+# Cliente de IA - Configura GROQ_API_KEY en las variables de entorno de Vercel
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 @app.route('/')
@@ -14,35 +16,40 @@ def home():
 def generate():
     try:
         data = request.json
-        dest = data.get('destino').title() # Forzamos mayúscula inicial
-        nac = data.get('nacionalidad').title()
-        estilo = data.get('estilo')
+        if not data:
+            return jsonify({"error": "No data received"}), 400
+
+        # Limpieza de entradas para asegurar mayúsculas
+        destino = data.get('destino', '').strip().title()
+        nacionalidad = data.get('nacionalidad', '').strip().title()
+        estilo = data.get('estilo', 'standard')
 
         prompt = f"""
-        Actúa como un Concierge VIP Internacional. Idioma: Español.
-        Destino: {dest}. Viajero de: {nac}. Estilo: {estilo.upper()}.
+        Actúa como un Concierge VIP Internacional. 
+        Destino: {destino}. Viajero: {nacionalidad}. Nivel: {estilo.upper()}.
+        Idioma: Español.
 
-        REQUISITOS DE FORMATO:
-        - Ortografía perfecta. 
-        - Todos los nombres de lugares (campo 'n') DEBEN empezar con Mayúscula.
-        - Precios solo en USD y EUR (ej: '45 USD / 42 EUR').
+        REGLAS DE ORO:
+        1. ORTOGRAFÍA: Uso impecable de tildes y gramática.
+        2. CAPITALIZACIÓN: Todos los nombres de lugares (campo 'n') DEBEN iniciar con Mayúscula.
+        3. MONEDA: Mostrar costos únicamente en Dólares (USD) y Euros (EUR). Formato: 'XX USD / XX EUR'.
+        4. CURADURÍA: Si el nivel es PREMIUM, priorizar exclusividad. Si es ECONOMICO, valor inteligente.
 
-        Responde en JSON:
+        Responde estrictamente en JSON:
         {{
-            "b": "Bienvenida sofisticada con ortografía impecable.",
-            "requisitos": "Requisitos legales detallados para entrar a {dest}.",
+            "b": "Bienvenida cálida y profesional.",
+            "requisitos": "Documentación, visas y salud para un {nacionalidad} en {destino}.",
             "puntos": [
                 {{
-                    "n": "Nombre Del Lugar Con Mayúsculas",
-                    "h": "Horarios detallados",
-                    "p": "Precio USD / Precio EUR",
+                    "n": "Nombre Del Lugar",
+                    "h": "Horarios recomendados",
+                    "p": "Costo en USD / Costo en EUR",
                     "t": "Transporte sugerido",
-                    "s": "Tip de experto con excelente gramática.",
-                    "img_search": "high quality photo of {dest} "
+                    "s": "Consejo de experto con gramática perfecta."
                 }}
             ]
         }}
-        Genera 5 puntos de interés reales.
+        Genera exactamente 5 puntos de interés reales.
         """
 
         completion = client.chat.completions.create(
@@ -53,4 +60,7 @@ def generate():
         
         return jsonify(json.loads(completion.choices[0].message.content))
     except Exception as e:
+        print(f"Error: {str(e)}")
         return jsonify({"error": str(e)}), 500
+
+app = app
