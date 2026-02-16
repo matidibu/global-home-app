@@ -20,31 +20,27 @@ def generate():
         estilo = data.get('estilo', 'standard')
 
         prompt = f"""
-        Eres un Concierge VIP. Genera una guía en {idioma}.
-        Destino: {dest}. Viajero: {nac}. Estilo: {estilo.upper()}.
-        
-        REQUISITOS:
-        - Ortografía perfecta. Nombres de lugares con Mayúscula.
-        - Precios SOLO en USD y EUR (Ej: 50 USD / 46 EUR).
+        Concierge VIP. Idioma: {idioma}. Destino: {dest}. Viajero: {nac}. Estilo: {estilo.upper()}.
+        REQUISITOS: Ortografía perfecta. Nombres propios con Mayúscula. 
+        Costos en USD y EUR obligatoriamente.
         
         Responde en JSON:
         {{
             "b": "Bienvenida elegante",
-            "requisitos": "Visas y trámites para {nac} en {dest}",
+            "requisitos": "Visas y salud para {nac} en {dest}",
             "puntos": [
                 {{
                     "n": "Nombre Del Lugar",
                     "h": "Horarios",
                     "p": "XX USD / XX EUR",
-                    "t": "Transporte",
+                    "t": "Transporte VIP",
                     "s": "Tip experto",
-                    "search_term": "{dest} {estilo} landmark"
+                    "img_query": "{dest} {estilo} landmark"
                 }}
             ]
         }}
         Genera 5 puntos.
         """
-
         completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[{"role": "user", "content": prompt}],
