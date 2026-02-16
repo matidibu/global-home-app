@@ -4,8 +4,6 @@ from flask import Flask, render_template, request, jsonify
 from groq import Groq
 
 app = Flask(__name__, template_folder='../templates')
-
-# La API KEY debe estar en Vercel como Environment Variable
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 @app.route('/')
@@ -16,29 +14,35 @@ def home():
 def generate():
     try:
         data = request.json
-        if not data:
-            return jsonify({"error": "No data received"}), 400
+        dest = data.get('destino')
+        nac = data.get('nacionalidad')
+        idioma = data.get('idioma')
+        estilo = data.get('estilo')
 
-        # Prompt optimizado para monetización y triple moneda
         prompt = f"""
-        Actúa como un Concierge VIP. Genera una guía en {data.get('idioma')}.
-        Destino: {data.get('destino')}. Viajero: {data.get('nacionalidad')}. Nivel: {data.get('estilo')}.
-        
+        Actúa como un Concierge VIP de nivel internacional. Idioma: {idioma}.
+        Destino: {dest}. Viajero de: {nac}. Estilo: {estilo.upper()}.
+
+        REGLAS DE MONEDA:
+        - Solo debes mostrar precios en Dólares Estadounidenses (USD) y Euros (EUR).
+        - Formato en el campo 'p': "100 USD / 92 EUR".
+
         Responde estrictamente en JSON:
         {{
             "b": "Bienvenida sofisticada",
-            "requisitos": "Requisitos legales detallados",
+            "requisitos": "Visas y salud para {nac} en {dest}",
             "puntos": [
                 {{
-                    "n": "Nombre Real",
+                    "n": "Nombre del lugar",
                     "h": "Horarios",
-                    "p": "Costo Local / {data.get('moneda')} / USD",
-                    "t": "Transporte sugerido",
+                    "p": "Costo en USD / Costo en EUR",
+                    "t": "Transporte VIP",
                     "s": "Tip de experto",
-                    "gyg_query": "Nombre exacto en inglés para tickets"
+                    "gyg_query": "Nombre en inglés para tickets"
                 }}
             ]
         }}
+        Genera 5 puntos.
         """
 
         completion = client.chat.completions.create(
