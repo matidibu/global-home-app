@@ -3,136 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Home Assist | The Executive Hub</title>
+    <title>Global Home Assist | Premium Concierge</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap" rel="stylesheet">
     <style>
-        /* Gradiente Gris Marcado y Difuminado */
+        /* Degradado Gris Marcado: Oscuro a Claro */
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background: linear-gradient(180deg, #1f2937 0%, #374151 15%, #9ca3af 60%, #e5e7eb 100%);
+            background: linear-gradient(180deg, #111827 0%, #374151 30%, #9ca3af 70%, #f3f4f6 100%);
             background-attachment: fixed;
             min-height: 100vh;
-            color: #111827;
+            color: #1f2937;
         }
         
         .glass-panel {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.4);
             border-radius: 2.5rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
 
         .card-experience {
             background: white;
-            border-radius: 2rem;
+            border-radius: 2.5rem;
             overflow: hidden;
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid #e5e7eb;
         }
 
+        /* Animación que pediste conservar */
         .card-experience:hover {
-            transform: translateY(-20px) scale(1.02);
-            box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.3);
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.2);
         }
 
-        .btn-action {
-            background: #1d4ed8;
-            transition: all 0.3s ease;
+        .input-premium {
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 1rem;
+            padding: 1rem;
+            outline: none;
+            width: 100%;
         }
-
-        .btn-action:hover {
-            background: #1e40af;
-            letter-spacing: 0.1em;
-        }
-
-        /* Efecto de carga sofisticado */
-        .shimmer {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-        }
-        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
     </style>
 </head>
-<body class="p-6 md:p-12">
+<body class="p-4 md:p-12">
 
-    <header class="max-w-6xl mx-auto text-center mb-16">
-        <h1 class="text-white text-6xl font-extrabold tracking-tighter mb-4">Global Home <span class="text-blue-400">Assist.</span></h1>
-        <p class="text-blue-200 font-light tracking-[0.4em] text-xs uppercase">The All-In-One Executive Platform</p>
+    <header class="max-w-6xl mx-auto text-center mb-12">
+        <h1 class="text-white text-5xl md:text-7xl font-extrabold tracking-tighter mb-4 italic">Global Home <span class="text-blue-400">Assist.</span></h1>
+        <p class="text-blue-100 font-bold uppercase tracking-[0.4em] text-[10px]">Ecosistema de Viajes de Alta Gama</p>
     </header>
 
-    <main class="max-w-6xl mx-auto space-y-12">
+    <main class="max-w-6xl mx-auto space-y-10 pb-20">
         
-        <section class="glass-panel p-10">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div class="space-y-2">
-                    <label class="text-[10px] font-bold uppercase text-slate-500 ml-2">Origen y Ciudad</label>
-                    <div class="flex gap-2">
-                        <input type="text" id="nac" placeholder="Nacionalidad" class="w-1/2 p-4 rounded-xl border-none ring-1 ring-slate-200">
-                        <input type="text" id="dest" placeholder="Destino" class="w-1/2 p-4 rounded-xl border-none ring-1 ring-slate-200">
-                    </div>
-                </div>
-                <div class="space-y-2">
-                    <label class="text-[10px] font-bold uppercase text-slate-500 ml-2">Preferencia de Clase</label>
-                    <select id="estilo" class="w-full p-4 rounded-xl border-none ring-1 ring-slate-200">
-                        <option value="economico">Económico (Valor Inteligente)</option>
-                        <option value="standard" selected>Standard (Ejecutivo)</option>
-                        <option value="premium">Premium (Lujo Absoluto)</option>
-                    </select>
-                </div>
-                <div class="space-y-2">
-                    <label class="text-[10px] font-bold uppercase text-slate-500 ml-2">Configuración</label>
-                    <div class="flex gap-2">
-                        <select id="idioma" class="w-1/2 p-4 rounded-xl border-none ring-1 ring-slate-200">
-                            <option value="Español">ES</option>
-                            <option value="Inglés">EN</option>
-                            <option value="Italiano">IT</option>
-                            <option value="Francés">FR</option>
-                        </select>
-                        <select id="moneda" class="w-1/2 p-4 rounded-xl border-none ring-1 ring-slate-200">
-                            <option value="ARS">ARS</option><option value="USD">USD</option><option value="EUR">EUR</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="flex items-end">
-                    <button onclick="generar()" class="btn-action w-full text-white font-bold py-4 rounded-xl uppercase text-xs tracking-widest shadow-2xl">
-                        Sincronizar Guía
-                    </button>
-                </div>
+        <section class="glass-panel p-8 md:p-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <input type="text" id="nac" placeholder="Nacionalidad (ej: Argentino)" class="input-premium">
+                <input type="text" id="dest" placeholder="Ciudad Destino (ej: Roma)" class="input-premium">
+                
+                <select id="estilo" class="input-premium">
+                    <option value="economico">Económico (Inteligente)</option>
+                    <option value="standard" selected>Standard (Ejecutivo)</option>
+                    <option value="premium">Premium (Lujo Total)</option>
+                </select>
+
+                <select id="perfil" class="input-premium">
+                    <option value="solo">Solo</option>
+                    <option value="pareja">Pareja</option>
+                    <option value="familia">Familia</option>
+                </select>
+
+                <select id="idioma" class="input-premium">
+                    <option value="Español">Español</option>
+                    <option value="Inglés">English</option>
+                    <option value="Italiano">Italiano</option>
+                    <option value="Francés">Français</option>
+                </select>
+
+                <select id="moneda" class="input-premium">
+                    <option value="ARS">ARS (Peso Arg)</option>
+                    <option value="USD">USD (Dólar)</option>
+                    <option value="EUR">EUR (Euro)</option>
+                    <option value="MXN">MXN (Peso Mex)</option>
+                </select>
+
+                <button onclick="generar()" class="md:col-span-2 bg-blue-700 text-white font-black py-4 rounded-2xl uppercase text-xs tracking-widest hover:bg-blue-800 shadow-2xl transition-all active:scale-95">
+                    Diseñar Itinerario Solvente
+                </button>
             </div>
         </section>
 
-        <div id="load" class="hidden text-center text-white py-20 font-bold tracking-[0.5em] animate-pulse">OPTIMIZANDO RECURSOS GLOBALES...</div>
+        <div id="load" class="hidden text-center text-white font-bold animate-pulse tracking-[0.5em]">SINCRONIZANDO CON GLOBAL DATABASES...</div>
 
-        <div id="res" class="hidden space-y-12">
+        <div id="res" class="hidden space-y-10">
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="md:col-span-2 glass-panel p-12">
-                    <h2 class="text-3xl font-black mb-6 text-slate-900">Estrategia de Viaje</h2>
-                    <p id="b" class="text-lg text-slate-600 leading-relaxed italic"></p>
+                <div class="md:col-span-2 glass-panel p-10">
+                    <h2 class="text-3xl font-black mb-4 tracking-tighter">Bienvenido a su Destino</h2>
+                    <p id="b" class="text-slate-600 leading-relaxed italic"></p>
                 </div>
-                <div class="glass-panel p-10 bg-blue-700 text-white border-none">
-                    <h3 class="font-bold text-xs uppercase tracking-widest mb-6 opacity-80 border-b border-blue-400 pb-2">Compliance Legal</h3>
-                    <p id="req" class="text-sm font-light leading-loose"></p>
+                <div class="glass-panel p-10 bg-blue-700 text-white border-none shadow-blue-500/20">
+                    <h3 class="font-bold text-[10px] uppercase tracking-widest mb-4 opacity-75 border-b border-blue-400 pb-2">Requisitos de Entrada</h3>
+                    <p id="req" class="text-sm font-light leading-relaxed"></p>
                 </div>
             </div>
 
-            <h3 class="text-white text-xs font-bold uppercase tracking-[0.3em] mb-4 ml-4">Servicios Logísticos Integrados</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <a id="link-booking" target="_blank" class="glass-panel p-8 text-center group hover:bg-white transition-colors">
-                    <span class="text-xs font-bold uppercase text-blue-700 tracking-widest">Hotelería Curada</span>
+                <a id="link-booking" target="_blank" class="glass-panel p-6 text-center hover:bg-blue-50 transition-colors">
+                    <span class="text-[10px] font-bold uppercase text-blue-700 tracking-widest">Booking & Hoteles VIP</span>
                 </a>
-                <a id="link-airbnb" target="_blank" class="glass-panel p-8 text-center group hover:bg-white transition-colors">
-                    <span class="text-xs font-bold uppercase text-rose-600 tracking-widest">Residencias Privadas</span>
+                <a id="link-airbnb" target="_blank" class="glass-panel p-6 text-center hover:bg-rose-50 transition-colors">
+                    <span class="text-[10px] font-bold uppercase text-rose-600 tracking-widest">Residencias de Lujo</span>
                 </a>
-                <a id="link-autos" target="_blank" class="glass-panel p-8 text-center group hover:bg-white transition-colors">
-                    <span class="text-xs font-bold uppercase text-emerald-600 tracking-widest">Movilidad Ejecutiva</span>
+                <a id="link-autos" target="_blank" class="glass-panel p-6 text-center hover:bg-emerald-50 transition-colors">
+                    <span class="text-[10px] font-bold uppercase text-emerald-600 tracking-widest">Alquiler de Vehículos</span>
                 </a>
             </div>
 
-            <h3 class="text-white text-xs font-bold uppercase tracking-[0.3em] mb-4 ml-4">Puntos de Interés y Guía</h3>
-            <div id="lista-puntos" class="grid grid-cols-1 md:grid-cols-2 gap-12"></div>
+            <div id="lista-puntos" class="grid grid-cols-1 md:grid-cols-2 gap-10"></div>
+
         </div>
     </main>
 
@@ -142,12 +132,12 @@
                 destino: document.getElementById('dest').value,
                 nacionalidad: document.getElementById('nac').value,
                 estilo: document.getElementById('estilo').value,
+                perfil: document.getElementById('perfil').value,
                 idioma: document.getElementById('idioma').value,
-                moneda: document.getElementById('moneda').value,
-                perfil: "Viajero Ejecutivo"
+                moneda: document.getElementById('moneda').value
             };
 
-            if(!params.destino || !params.nacionalidad) return;
+            if(!params.destino || !params.nacionalidad) return alert("Complete Origen y Destino.");
 
             document.getElementById('res').classList.add('hidden');
             document.getElementById('load').classList.remove('hidden');
@@ -163,38 +153,36 @@
                 document.getElementById('b').innerText = d.b;
                 document.getElementById('req').innerText = d.requisitos;
 
-                // Configuración de Links Inteligentes (Mejor que la competencia)
-                let bFilter = params.estilo === "premium" ? "&nflt=class%3D5" : params.estilo === "economico" ? "&nflt=class%3D1" : "";
-                document.getElementById('link-booking').href = `https://www.booking.com/searchresults.html?ss=${params.destino}${bFilter}`;
-                document.getElementById('link-airbnb').href = `https://www.airbnb.com/s/${params.destino}/homes`;
-                document.getElementById('link-autos').href = `https://www.rentalcars.com/search-results?locationName=${params.destino}`;
+                // Deep Linking con Filtros
+                let filter = params.estilo === "premium" ? "&nflt=class%3D5" : params.estilo === "economico" ? "&nflt=ht_id%3D203" : "";
+                document.getElementById('link-booking').href = `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(params.destino)}${filter}`;
+                document.getElementById('link-airbnb').href = `https://www.airbnb.com/s/${encodeURIComponent(params.destino)}/homes`;
+                document.getElementById('link-autos').href = `https://www.rentalcars.com/search-results?locationName=${encodeURIComponent(params.destino)}`;
 
                 const list = document.getElementById('lista-puntos');
                 list.innerHTML = "";
                 
                 d.puntos.forEach(p => {
-                    // SISTEMA DE IMÁGENES REPARADO: Usamos una API de alta fidelidad basada en el query de la IA
-                    const imgUrl = `https://api.microlink.io?url=https://www.google.com/search?q=${encodeURIComponent(p.n + " " + params.destino)}&screenshot=true&embed=screenshot.url`;
-                    
-                    // Como fallback dinámico que SI funciona:
-                    const fallback = `https://loremflickr.com/800/500/${encodeURIComponent(p.n)},city/all`;
+                    // Sistema de Imágenes Corregido
+                    const imgQuery = `${p.n},${params.destino}`.replace(/\s+/g, ',');
+                    const fotoUrl = `https://loremflickr.com/800/500/${imgQuery}/all`;
 
                     list.innerHTML += `
-                        <div class="card-experience card-point">
-                            <div class="h-80 bg-slate-200 relative overflow-hidden">
-                                <img src="${fallback}" class="w-full h-full object-cover">
-                                <div class="absolute top-4 right-4 bg-white/90 px-4 py-2 rounded-full text-[10px] font-black uppercase text-blue-700 shadow-xl">
+                        <div class="card-experience card-point shadow-sm">
+                            <div class="h-72 bg-slate-200 relative overflow-hidden">
+                                <img src="${fotoUrl}" class="w-full h-full object-cover">
+                                <div class="absolute top-4 right-4 bg-white/95 px-4 py-2 rounded-full text-[10px] font-black uppercase text-blue-700 shadow-xl">
                                     ${p.p}
                                 </div>
                             </div>
-                            <div class="p-10 space-y-6">
-                                <div class="flex justify-between items-end">
-                                    <h4 class="text-3xl font-bold tracking-tighter text-slate-900">${p.n}</h4>
-                                </div>
-                                <p class="text-slate-500 font-light italic leading-relaxed">"${p.s}"</p>
-                                <div class="flex gap-4 pt-4 border-t border-slate-100">
-                                    <a href="https://www.getyourguide.com/s?q=${params.destino}" target="_blank" class="btn-action flex-1 text-center py-4 text-white rounded-xl text-[10px] font-bold uppercase tracking-widest shadow-lg">Tickets & Guía</a>
-                                    <a href="https://www.google.com/maps/search/${p.n}+${params.destino}" target="_blank" class="bg-slate-100 flex-1 text-center py-4 text-slate-600 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-slate-200 transition-all">Mapa</a>
+                            <div class="p-10">
+                                <h4 class="text-3xl font-bold tracking-tighter mb-4 text-slate-900">${p.n}</h4>
+                                <p class="text-sm text-slate-500 italic mb-8 leading-relaxed">"${p.s}"</p>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <a href="https://www.getyourguide.com/s?q=${encodeURIComponent(p.n)}" target="_blank" 
+                                       class="bg-blue-700 text-white text-center py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg">Tickets & Guía</a>
+                                    <a href="https://www.google.com/maps/search/${encodeURIComponent(p.n + ' ' + params.destino)}" target="_blank" 
+                                       class="bg-slate-100 text-slate-600 text-center py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest">Mapa</a>
                                 </div>
                             </div>
                         </div>
@@ -206,7 +194,7 @@
 
             } catch (e) {
                 document.getElementById('load').classList.add('hidden');
-                alert("Error en la conexión con el Concierge Global.");
+                alert("Error de conexión. Verifique su API Key.");
             }
         }
     </script>

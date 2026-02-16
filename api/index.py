@@ -3,14 +3,10 @@ import json
 from flask import Flask, render_template, request, jsonify
 from groq import Groq
 
-# Configuración de rutas para Vercel
 base_dir = os.path.dirname(os.path.abspath(__file__))
 template_dir = os.path.join(base_dir, '..', 'templates')
 
 app = Flask(__name__, template_folder=template_dir)
-
-# Inicialización del cliente de IA
-# Asegúrate de tener la variable GROQ_API_KEY en tu panel de Vercel
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 @app.route('/')
@@ -20,74 +16,58 @@ def home():
 @app.route('/api/generate', methods=['POST'])
 def generate():
     try:
-        # 1. Recepción y validación de datos del front-end
         data = request.json
         if not data:
-            return jsonify({"error": "No se recibieron datos"}), 400
+            return jsonify({"error": "No data received"}), 400
 
-        destino = data.get('destino', 'Paris')
-        nacionalidad = data.get('nacionalidad', 'Argentino')
-        estilo = data.get('estilo', 'standard')
-        perfil = data.get('perfil', 'viajero')
-        idioma = data.get('idioma', 'Español')
-        moneda_usuario = data.get('moneda', 'USD')
+        # Parámetros del usuario
+        dest = data.get('destino')
+        nac = data.get('nacionalidad')
+        estilo = data.get('estilo')
+        idioma = data.get('idioma')
+        moneda = data.get('moneda')
+        perfil = data.get('perfil')
 
-        # 2. Construcción del Prompt con lógica de solvencia y segmentación
         prompt = f"""
-        Actúa como un Concierge VIP Internacional de nivel Forbes Travel Guide. 
-        Tu misión es diseñar una guía de viaje perfecta en idioma {idioma}.
+        Actúa como un Concierge VIP de élite. Genera una guía de viaje profesional en {idioma}.
+        Destino: {dest}. Viajero de: {nac}. Nivel de servicio: {estilo.upper()}.
         
-        PERFIL DEL VIAJE:
-        - Destino: {destino}
-        - Viajero de: {nacionalidad}
-        - Estilo de Vida: {estilo.upper()} (Si es PREMIUM, prioriza exclusividad y lujo. Si es ECONOMICO, prioriza valor inteligente).
-        - Perfil: {perfil}
-
-        REQUERIMIENTO DE MONEDA:
-        En el campo 'p', debes expresar los costos estimados en este orden exacto:
-        Moneda Local de {destino} / {moneda_usuario} / USD.
-
-        RESPONDE EXCLUSIVAMENTE EN FORMATO JSON:
+        INSTRUCCIONES CRÍTICAS:
+        1. REQUISITOS: Indica detalladamente visas, pasaporte y salud para un {nac} entrando a {dest}.
+        2. MONEDA: En el campo 'p', muestra el precio estimado en: Local de {dest} / {moneda} / USD.
+        3. CURADURÍA: Si es PREMIUM, incluye hitos pero con enfoque en exclusividad, lujo y servicios VIP.
+        
+        Responde estrictamente en JSON:
         {{
-            "b": "Bienvenida sofisticada y breve que refleje solvencia.",
-            "requisitos": "Lista detallada de trámites: Visa, pasaporte, vacunas o tasas necesarias para un {nacionalidad} en {destino}.",
+            "b": "Bienvenida breve y sofisticada",
+            "requisitos": "Texto detallado de requisitos legales y consulares",
             "servicios": {{
-                "consulado": {{"n": "Representación de {nacionalidad} en {destino}", "m": "https://www.google.com/maps/search/consulate+{nacionalidad}+{destino}"}},
-                "hospital": {{"n": "Hospital de Referencia {estilo}", "m": "https://www.google.com/maps/search/hospital+{destino}"}},
-                "policia": {{"n": "Estación de Seguridad Central", "m": "https://www.google.com/maps/search/police+station+{destino}"}}
+                "consulado": {{"n": "Embajada/Consulado de {nac}", "m": "https://www.google.com/maps/search/embassy+{nac}+{dest}"}},
+                "hospital": {{"n": "Centro Médico de Alta Complejidad", "m": "https://www.google.com/maps/search/hospital+{dest}"}},
+                "policia": {{"n": "Estación de Policía Central", "m": "https://www.google.com/maps/search/police+{dest}"}}
             }},
             "puntos": [
                 {{
-                    "n": "Nombre Real del Punto de Interés",
-                    "h": "Horarios sugeridos",
-                    "p": "Costo Local / {moneda_usuario} / USD",
-                    "t": "Transporte recomendado (ej: transfer privado, metro, etc)",
-                    "s": "Consejo de experto para {perfil} que no aparece en Google."
+                    "n": "Nombre del lugar",
+                    "h": "Horarios",
+                    "p": "Costo Local / {moneda} / USD",
+                    "t": "Transporte recomendado",
+                    "s": "Tip de experto para {perfil}"
                 }}
             ]
         }}
-        Genera un total de 5 puntos de interés.
+        Genera exactamente 5 puntos de interés.
         """
 
-        # 3. Llamada a la IA
         completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[{"role": "user", "content": prompt}],
             response_format={"type": "json_object"}
         )
-
-        # 4. Procesamiento de la respuesta
-        respuesta_ia = json.loads(completion.choices[0].message.content)
         
-        return jsonify(respuesta_ia)
-
+        return jsonify(json.loads(completion.choices[0].message.content))
     except Exception as e:
-        # Registro del error en consola para debugging en Vercel
-        print(f"DEBUG ERROR: {str(e)}")
-        return jsonify({
-            "error": "Error interno del Concierge",
-            "details": str(e)
-        }), 500
+        print(f"Error: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
-# Exportar para Vercel
 app = app
