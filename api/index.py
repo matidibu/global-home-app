@@ -14,35 +14,35 @@ def home():
 def generate():
     try:
         data = request.json
-        dest = data.get('destino')
-        nac = data.get('nacionalidad')
-        idioma = data.get('idioma')
+        dest = data.get('destino').title() # Forzamos mayúscula inicial
+        nac = data.get('nacionalidad').title()
         estilo = data.get('estilo')
 
         prompt = f"""
-        Actúa como un Concierge VIP de nivel internacional. Idioma: {idioma}.
+        Actúa como un Concierge VIP Internacional. Idioma: Español.
         Destino: {dest}. Viajero de: {nac}. Estilo: {estilo.upper()}.
 
-        REGLAS DE MONEDA:
-        - Solo debes mostrar precios en Dólares Estadounidenses (USD) y Euros (EUR).
-        - Formato en el campo 'p': "100 USD / 92 EUR".
+        REQUISITOS DE FORMATO:
+        - Ortografía perfecta. 
+        - Todos los nombres de lugares (campo 'n') DEBEN empezar con Mayúscula.
+        - Precios solo en USD y EUR (ej: '45 USD / 42 EUR').
 
-        Responde estrictamente en JSON:
+        Responde en JSON:
         {{
-            "b": "Bienvenida sofisticada",
-            "requisitos": "Visas y salud para {nac} en {dest}",
+            "b": "Bienvenida sofisticada con ortografía impecable.",
+            "requisitos": "Requisitos legales detallados para entrar a {dest}.",
             "puntos": [
                 {{
-                    "n": "Nombre del lugar",
-                    "h": "Horarios",
-                    "p": "Costo en USD / Costo en EUR",
-                    "t": "Transporte VIP",
-                    "s": "Tip de experto",
-                    "gyg_query": "Nombre en inglés para tickets"
+                    "n": "Nombre Del Lugar Con Mayúsculas",
+                    "h": "Horarios detallados",
+                    "p": "Precio USD / Precio EUR",
+                    "t": "Transporte sugerido",
+                    "s": "Tip de experto con excelente gramática.",
+                    "img_search": "high quality photo of {dest} "
                 }}
             ]
         }}
-        Genera 5 puntos.
+        Genera 5 puntos de interés reales.
         """
 
         completion = client.chat.completions.create(
