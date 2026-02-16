@@ -3,98 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Home | Executive Assist</title>
+    <title>Global Assist | Smart Travel</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;700;900&family=Lexend+Deca:wght@200;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #C5A059; --bg: #0A0A0A; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: #fff; }
-        .font-title { font-family: 'Lexend Deca', sans-serif; }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); }
-        .btn-gold { background: var(--accent); color: #000; transition: all 0.4s ease; }
-        .btn-gold:hover { background: #e2b86a; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(197, 160, 89, 0.2); }
-        .gradient-text { background: linear-gradient(135deg, #fff 0%, #a1a1a1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .image-overlay { background: linear-gradient(0deg, rgba(10,10,10,1) 0%, rgba(10,10,10,0) 50%); }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfcfd; color: #1a1a1a; }
+        .input-light { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 1.2rem; color: #1a1a1a; padding: 1rem; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .input-light:focus { border-color: #2563eb; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); outline: none; }
+        .card-premium { background: #ffffff; border: 1px solid #f1f5f9; border-radius: 2.5rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05); }
+        .accent-gradient { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); }
     </style>
 </head>
-<body class="overflow-x-hidden">
+<body class="p-4 md:p-8">
 
-    <header class="relative h-[60vh] flex flex-col justify-center items-center text-center px-6">
-        <div class="absolute inset-0 opacity-40 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
-        <h1 class="font-title text-6xl font-light tracking-[0.3em] gradient-text mb-4 uppercase">Global Assist</h1>
-        <div class="h-[1px] w-32 bg-[#C5A059] mb-6"></div>
-        <p class="text-slate-400 font-light tracking-widest text-xs uppercase">The New Era of Travel Security</p>
+    <header class="max-w-5xl mx-auto flex flex-col items-center mb-12 py-10">
+        <div class="bg-blue-50 text-blue-600 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4">Concierge Digital de Élite</div>
+        <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight text-center">Global Home <span class="text-blue-600">Assist.</span></h1>
     </header>
 
-    <main class="max-w-4xl mx-auto -mt-32 px-6 pb-40 relative z-10">
-        
-        <section class="glass-card rounded-none p-12 mb-24">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                <div class="relative group">
-                    <input type="text" id="nac" required class="w-full bg-transparent border-b border-slate-700 p-3 outline-none focus:border-[#C5A059] transition-all peer" placeholder=" ">
-                    <label class="absolute left-3 top-3 text-slate-500 pointer-events-none transition-all peer-focus:-top-4 peer-focus:text-[10px] peer-focus:text-[#C5A059] uppercase tracking-widest">Nacionalidad</label>
+    <main class="max-w-5xl mx-auto space-y-10">
+        <div class="card-premium p-8 md:p-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="flex flex-col gap-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">¿De dónde eres?</label>
+                    <input type="text" id="nac" placeholder="Nacionalidad" class="input-light">
                 </div>
-                <div class="relative group">
-                    <input type="text" id="dest" required class="w-full bg-transparent border-b border-slate-700 p-3 outline-none focus:border-[#C5A059] transition-all peer" placeholder=" ">
-                    <label class="absolute left-3 top-3 text-slate-500 pointer-events-none transition-all peer-focus:-top-4 peer-focus:text-[10px] peer-focus:text-[#C5A059] uppercase tracking-widest">Destino</label>
+                <div class="flex flex-col gap-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">¿A dónde vas?</label>
+                    <input type="text" id="dest" placeholder="Ciudad de destino" class="input-light">
                 </div>
-                <button onclick="generar()" class="md:col-span-2 btn-gold font-bold py-5 rounded-none uppercase tracking-[0.2em] text-sm">
-                    Generate Itinerary
-                </button>
+                <div class="flex flex-col gap-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Presupuesto</label>
+                    <select id="estilo" class="input-light">
+                        <option value="económico">Económico / Mochilero</option>
+                        <option value="standard" selected>Standard / Clase Media</option>
+                        <option value="premium">Premium / Exclusivo</option>
+                    </select>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Acompañantes</label>
+                    <select id="perfil" class="input-light">
+                        <option value="solo">Viajo solo</option>
+                        <option value="pareja">En pareja</option>
+                        <option value="familia">En familia</option>
+                        <option value="mascotas">Con mascotas</option>
+                    </select>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Idioma</label>
+                    <select id="idioma" class="input-light">
+                        <option value="Español">Español</option>
+                        <option value="Inglés">English</option>
+                    </select>
+                </div>
+                <div class="flex items-end">
+                    <button onclick="generar()" class="w-full accent-gradient text-white font-bold py-4 rounded-2xl shadow-lg hover:shadow-blue-200 transition-all active:scale-95 uppercase text-xs tracking-widest">
+                        Comenzar Viaje
+                    </button>
+                </div>
             </div>
-        </section>
+        </div>
 
-        <div id="load" class="hidden text-center py-20 italic font-extralight tracking-[0.5em] text-slate-500 animate-pulse">CREATING EXCELLENCE...</div>
+        <div id="load" class="hidden text-center py-20 text-blue-600 font-bold animate-pulse tracking-widest">ORGANIZANDO TU DESTINO...</div>
 
-        <div id="res" class="hidden space-y-32">
+        <div id="res" class="hidden space-y-12 pb-20">
             
-            <div class="max-w-2xl mx-auto text-center">
-                <p id="b" class="text-2xl font-light leading-relaxed text-slate-300 italic"></p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-2 card-premium p-10 bg-white">
+                    <h3 id="b-title" class="text-2xl font-bold mb-4 text-slate-900"></h3>
+                    <p id="b" class="text-slate-600 leading-relaxed"></p>
+                </div>
+                <div class="card-premium p-10 bg-blue-600 text-white shadow-blue-100">
+                    <h4 class="text-xs font-bold uppercase tracking-widest mb-4 opacity-80">Requisitos de Entrada</h4>
+                    <p id="req" class="text-sm leading-relaxed font-light"></p>
+                </div>
             </div>
 
-            <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <a id="link-hotel" target="_blank" class="glass-card p-10 hover:bg-white/5 transition-all group flex flex-col items-center">
-                    <svg class="w-10 h-10 mb-6 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                    <span class="font-title text-xs tracking-widest uppercase">Luxury Residences</span>
-                </a>
-                <a id="link-auto" target="_blank" class="glass-card p-10 hover:bg-white/5 transition-all group flex flex-col items-center">
-                    <svg class="w-10 h-10 mb-6 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-                    <span class="font-title text-xs tracking-widest uppercase">Private Mobility</span>
-                </a>
-            </section>
+            <div class="space-y-8">
+                <h3 class="text-xl font-bold px-4 flex items-center gap-3">
+                    <span class="w-8 h-[2px] bg-blue-600"></span>
+                    Lugares Recomendados
+                </h3>
+                <div id="lista-puntos" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+            </div>
 
-            <section class="space-y-40">
-                <h3 class="font-title text-sm tracking-[0.4em] text-[#C5A059] uppercase text-center mb-20">Selected Experiences</h3>
-                <div id="lista-puntos" class="space-y-40"></div>
-            </section>
-
-            <section class="border-t border-white/10 pt-20 pb-40">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-16">
-                    <div class="space-y-4">
-                        <p class="text-[10px] font-bold text-[#C5A059] uppercase tracking-widest">Diplomatic Support</p>
-                        <p id="c-info" class="text-sm font-light text-slate-400"></p>
-                        <a id="c-maps" target="_blank" class="text-[10px] underline underline-offset-8">LOCATE</a>
+            <div class="card-premium p-12 bg-slate-900 text-white relative overflow-hidden">
+                <div class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-12">
+                    <div>
+                        <p class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-4">Apoyo Diplomático</p>
+                        <p id="c-n" class="text-lg font-bold mb-4"></p>
+                        <a id="c-m" target="_blank" class="px-6 py-2 bg-white/10 rounded-full text-[10px] font-bold uppercase hover:bg-white/20 transition-all">Ver Ubicación</a>
                     </div>
-                    <div class="space-y-4">
-                        <p class="text-[10px] font-bold text-[#C5A059] uppercase tracking-widest">Health Services</p>
-                        <p id="h-info" class="text-sm font-light text-slate-400"></p>
-                        <a id="h-maps" target="_blank" class="text-[10px] underline underline-offset-8">LOCATE</a>
+                    <div>
+                        <p class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-4">Centro Médico</p>
+                        <p id="h-n" class="text-lg font-bold mb-4"></p>
+                        <a id="h-m" target="_blank" class="px-6 py-2 bg-white/10 rounded-full text-[10px] font-bold uppercase hover:bg-white/20 transition-all">Ver Ubicación</a>
                     </div>
-                    <div class="space-y-4">
-                        <p class="text-[10px] font-bold text-[#C5A059] uppercase tracking-widest">Public Safety</p>
-                        <p id="p-info" class="text-sm font-light text-slate-400"></p>
-                        <a id="p-maps" target="_blank" class="text-[10px] underline underline-offset-8">LOCATE</a>
+                    <div>
+                        <p class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-4">Seguridad Local</p>
+                        <p id="p-n" class="text-lg font-bold mb-4"></p>
+                        <a id="p-m" target="_blank" class="px-6 py-2 bg-white/10 rounded-full text-[10px] font-bold uppercase hover:bg-white/20 transition-all">Ver Ubicación</a>
                     </div>
                 </div>
-            </section>
+            </div>
         </div>
     </main>
 
     <script>
         async function generar() {
-            const n = document.getElementById('nac').value;
-            const t = document.getElementById('dest').value;
-            if(!n || !t) return;
+            const params = {
+                nacionalidad: document.getElementById('nac').value,
+                destino: document.getElementById('dest').value,
+                estilo: document.getElementById('estilo').value,
+                perfil: document.getElementById('perfil').value,
+                idioma: document.getElementById('idioma').value
+            };
+
+            if(!params.nacionalidad || !params.destino) return alert("Por favor, ingrese origen y destino.");
 
             document.getElementById('res').classList.add('hidden');
             document.getElementById('load').classList.remove('hidden');
@@ -103,44 +128,36 @@
                 const r = await fetch('/api/generate', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({nacionalidad: n, destino: t})
+                    body: JSON.stringify(params)
                 });
                 const d = await r.json();
 
+                document.getElementById('b-title').innerText = "Tu guía en " + params.destino;
                 document.getElementById('b').innerText = d.b;
-                document.getElementById('c-info').innerText = d.servicios.consulado.n;
-                document.getElementById('c-maps').href = d.servicios.consulado.m;
-                document.getElementById('h-info').innerText = d.servicios.hospital.n;
-                document.getElementById('h-maps').href = d.servicios.hospital.m;
-                document.getElementById('p-info').innerText = d.servicios.policia.n;
-                document.getElementById('p-maps').href = d.servicios.policia.m;
-
-                document.getElementById('link-hotel').href = `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(t)}`;
-                document.getElementById('link-auto').href = `https://www.rentalcars.com/search-results?locationName=${encodeURIComponent(t)}`;
+                document.getElementById('req').innerText = d.requisitos;
+                
+                document.getElementById('c-n').innerText = d.servicios.consulado.n;
+                document.getElementById('c-m').href = d.servicios.consulado.m;
+                document.getElementById('h-n').innerText = d.servicios.hospital.n;
+                document.getElementById('h-m').href = d.servicios.hospital.m;
+                document.getElementById('p-n').innerText = d.servicios.policia.n;
+                document.getElementById('p-m').href = d.servicios.policia.m;
 
                 const list = document.getElementById('lista-puntos');
                 list.innerHTML = "";
-                
                 d.puntos.forEach(p => {
-                    // LINK DE IMAGEN DINÁMICO DE ALTA CALIDAD
-                    const imgUrl = `https://images.unsplash.com/photo-1?auto=format&fit=crop&q=80&w=1200&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&q=80&h=800&w=1200&sig=${Math.random()}&content=travel,${encodeURIComponent(p.key)},${encodeURIComponent(t)}`;
-                    
                     list.innerHTML += `
-                        <div class="group relative">
-                            <div class="relative overflow-hidden h-[70vh] w-full">
-                                <img src="https://source.unsplash.com/featured/1200x800?${encodeURIComponent(p.key)},${encodeURIComponent(t)}" class="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110">
-                                <div class="absolute inset-0 image-overlay"></div>
-                                <div class="absolute bottom-10 left-0 p-10 space-y-4">
-                                    <h4 class="font-title text-4xl font-light tracking-tighter uppercase">${p.n}</h4>
-                                    <div class="flex gap-6 text-[10px] font-bold tracking-[0.2em] text-slate-400">
-                                        <span>${p.h}</span>
-                                        <span class="text-[#C5A059]">${p.p}</span>
-                                    </div>
-                                    <p class="max-w-md text-sm text-slate-300 font-light italic opacity-80 leading-relaxed">${p.s}</p>
-                                    <div class="pt-6 flex gap-10">
-                                        <a href="${p.link}" target="_blank" class="text-[10px] font-bold tracking-widest underline underline-offset-8 decoration-[#C5A059]">RESERVE EXPERIENCE</a>
-                                        <a href="https://www.google.com/maps/search/${encodeURIComponent(p.n)}+${encodeURIComponent(t)}" target="_blank" class="text-[10px] font-bold tracking-widest text-slate-400">VIEW MAP</a>
-                                    </div>
+                        <div class="card-premium overflow-hidden group hover:shadow-2xl transition-all duration-500">
+                            <img src="https://source.unsplash.com/1200x800/?${p.key},city" class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-700">
+                            <div class="p-8">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h4 class="text-xl font-bold">${p.n}</h4>
+                                    <span class="text-blue-600 font-bold text-xs uppercase bg-blue-50 px-3 py-1 rounded-full">${p.p}</span>
+                                </div>
+                                <p class="text-slate-500 text-sm mb-6 leading-relaxed italic">"${p.s}"</p>
+                                <div class="flex gap-3">
+                                    <a href="${p.link}" target="_blank" class="flex-1 text-center py-3 accent-gradient text-white rounded-xl text-[10px] font-bold uppercase tracking-widest">Entradas</a>
+                                    <a href="https://www.google.com/maps/search/${p.key}+${params.destino}" target="_blank" class="flex-1 text-center py-3 bg-slate-50 text-slate-600 rounded-xl text-[10px] font-bold uppercase tracking-widest">Mapa</a>
                                 </div>
                             </div>
                         </div>
@@ -149,9 +166,10 @@
 
                 document.getElementById('load').classList.add('hidden');
                 document.getElementById('res').classList.remove('hidden');
+
             } catch (e) {
                 document.getElementById('load').classList.add('hidden');
-                alert("The service is temporarily unavailable.");
+                alert("Error al conectar con el servidor.");
             }
         }
     </script>

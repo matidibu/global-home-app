@@ -17,25 +17,29 @@ def home():
 def generate():
     try:
         data = request.json
-        dest = data.get('destino', 'Madrid')
-        nac = data.get('nacionalidad', 'Argentino')
+        dest = data.get('destino')
+        nac = data.get('nacionalidad')
+        estilo = data.get('estilo')
+        perfil = data.get('perfil')
+        idioma = data.get('idioma', 'Español')
         
         prompt = f"""
-        Actúa como un Concierge de Lujo. Destino: {dest}, Viajero: {nac}.
-        Responde en JSON con estos campos:
-        'b': Bienvenida sofisticada.
-        'clima': Breve estado del tiempo.
+        Actúa como un Asesor de Viajes Senior. Cliente: {nac}, Destino: {dest}, Estilo: {estilo}, Perfil: {perfil}.
+        Idioma: {idioma}.
+        Responde en JSON con:
+        'b': Bienvenida vital y profesional.
+        'requisitos': 'Lista detallada de requisitos de entrada para un {nac} a {dest} (Visa, pasaporte, seguros, etc.)',
+        'clima': 'Información climática útil',
         'servicios': {{
-            'consulado': {{'n': 'Embajada {nac}', 'm': 'https://www.google.com/maps/search/{nac}+embassy+{dest}'}},
-            'hospital': {{'n': 'Hospital Privado {dest}', 'm': 'https://www.google.com/maps/search/private+hospital+{dest}'}},
-            'policia': {{'n': 'Police Department', 'm': 'https://www.google.com/maps/search/police+station+{dest}'}}
+            'consulado': {{'n': 'Embajada/Consulado de {nac}', 'm': 'https://www.google.com/maps/search/{nac}+embassy+{dest}'}},
+            'hospital': {{'n': 'Hospital de Alta Complejidad', 'm': 'https://www.google.com/maps/search/hospital+{dest}'}},
+            'policia': {{'n': 'Centro de Seguridad Local', 'm': 'https://www.google.com/maps/search/police+station+{dest}'}}
         }},
         'puntos': [{{
-            'n': 'Nombre en español', 
-            'key': 'Nombre en inglés para buscador de fotos',
-            'h': 'Horario', 'p': 'Precio', 't': 'Transporte', 's': 'Tip de lujo',
+            'n': 'Lugar', 'h': 'Horarios', 'p': 'Precios aproximados', 't': 'Cómo llegar', 's': 'Consejo de experto para {perfil}',
+            'key': 'English location name for photo search',
             'link': 'https://www.civitatis.com/es/{dest}/'
-        }}] (Lista de 5)
+        }}] (5 puntos)
         """
 
         completion = client.chat.completions.create(
