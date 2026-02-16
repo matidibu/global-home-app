@@ -3,118 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Assist | Solvencia Premium</title>
+    <title>Global Assist | Luxury Concierge</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        /* Fondo Gris con Difuminado Plus */
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
             background: radial-gradient(circle at top right, #f3f4f6 0%, #d1d5db 100%);
             background-attachment: fixed;
-            color: #1f2937; 
             min-height: 100vh;
         }
-        
         .card-premium { 
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border-radius: 2.5rem; 
-            border: 1px solid rgba(255,255,255,0.4);
-            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 2rem; 
+            border: 1px solid rgba(255,255,255,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
             transition: all 0.5s ease;
         }
-        
         .card-point:hover { 
-            transform: translateY(-15px);
-            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.15);
+            transform: translateY(-12px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.12);
         }
-
-        .btn-main { background: #1d4ed8; color: white; transition: 0.3s; }
-        .btn-main:hover { background: #1e40af; transform: scale(1.02); }
+        .select-custom {
+            appearance: none;
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            outline: none;
+        }
     </style>
 </head>
 <body class="p-4 md:p-10">
 
-    <header class="max-w-5xl mx-auto py-12 text-center">
+    <header class="max-w-5xl mx-auto py-10 text-center">
         <h1 class="text-5xl font-extrabold tracking-tighter text-slate-900">Global Home <span class="text-blue-700">Assist</span></h1>
-        <p class="text-slate-500 font-bold uppercase tracking-[0.3em] text-[10px] mt-2">Personal Travel Concierge</p>
+        <p class="text-slate-500 font-bold uppercase tracking-[0.2em] text-[10px] mt-2">Internacional Multi-Language Concierge</p>
     </header>
 
-    <main class="max-w-5xl mx-auto space-y-10 pb-24">
-        
-        <div class="card-premium p-10">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <input type="text" id="nac" placeholder="Nacionalidad" class="p-4 rounded-2xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-600">
-                <input type="text" id="dest" placeholder="Ciudad de Destino" class="p-4 rounded-2xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-600">
-                <select id="estilo" class="p-4 rounded-2xl border border-slate-200 outline-none">
+    <main class="max-w-5xl mx-auto space-y-8">
+        <div class="card-premium p-8 md:p-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <input type="text" id="nac" placeholder="Nacionalidad" class="select-custom col-span-1 md:col-span-2">
+                <input type="text" id="dest" placeholder="Ciudad de Destino" class="select-custom col-span-1 md:col-span-2">
+                
+                <select id="estilo" class="select-custom">
                     <option value="economico">Económico</option>
                     <option value="standard" selected>Standard</option>
                     <option value="premium">Premium / Lujo</option>
                 </select>
-                <select id="perfil" class="p-4 rounded-2xl border border-slate-200 outline-none">
+
+                <select id="perfil" class="select-custom">
                     <option value="solo">Solo</option>
-                    <option value="pareja">Pareja</option>
-                    <option value="familia">Familia</option>
+                    <option value="pareja">En Pareja</option>
+                    <option value="familia">En Familia</option>
                     <option value="mascotas">Mascotas</option>
                 </select>
-                <select id="idioma" class="p-4 rounded-2xl border border-slate-200 outline-none">
+
+                <select id="idioma" class="select-custom">
                     <option value="Español">Español</option>
                     <option value="Inglés">English</option>
+                    <option value="Italiano">Italiano</option>
+                    <option value="Francés">Français</option>
                 </select>
-                <button onclick="generar()" class="btn-main font-bold py-4 rounded-2xl uppercase text-xs tracking-widest shadow-xl">Diseñar Experiencia</button>
+
+                <select id="moneda" class="select-custom">
+                    <option value="ARS">Peso Argentino (ARS)</option>
+                    <option value="EUR">Euro (EUR)</option>
+                    <option value="MXN">Peso Mexicano (MXN)</option>
+                    <option value="CLP">Peso Chileno (CLP)</option>
+                    <option value="BRL">Real (BRL)</option>
+                    <option value="USD">Dólar (USD)</option>
+                </select>
+
+                <button onclick="generar()" class="col-span-1 md:col-span-4 bg-blue-700 text-white font-bold py-4 rounded-2xl uppercase text-xs tracking-widest hover:bg-blue-800 transition-all shadow-lg">
+                    Generar Guía Multilingüe
+                </button>
             </div>
         </div>
 
-        <div id="load" class="hidden text-center py-20 font-bold text-blue-700 animate-pulse tracking-widest">PROCESANDO SOLICITUD VIP...</div>
+        <div id="load" class="hidden text-center py-20 font-bold text-blue-700 animate-pulse">Sincronizando con mercados internacionales...</div>
 
-        <div id="res" class="hidden space-y-12 animate-fade-in">
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div id="res" class="hidden space-y-10 pb-20">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="md:col-span-2 card-premium p-10">
                     <h3 class="text-2xl font-bold mb-4">Itinerario de Solvencia</h3>
-                    <p id="b" class="text-slate-600 leading-relaxed"></p>
+                    <p id="b" class="text-slate-600 leading-relaxed italic"></p>
                 </div>
-                <div class="card-premium p-10 bg-blue-700 text-white shadow-xl shadow-blue-200">
-                    <h4 class="font-bold text-xs uppercase tracking-widest mb-4 opacity-80 underline underline-offset-8">Requisitos Legales</h4>
-                    <p id="req" class="text-sm leading-relaxed"></p>
-                </div>
-            </div>
-
-            <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <a id="link-booking" target="_blank" class="card-premium p-8 text-center hover:bg-blue-50">
-                    <span class="text-3xl block mb-2">🏨</span>
-                    <span class="text-[10px] font-bold uppercase tracking-widest text-blue-700">Hoteles & Alojamiento</span>
-                </a>
-                <a id="link-airbnb" target="_blank" class="card-premium p-8 text-center hover:bg-rose-50">
-                    <span class="text-3xl block mb-2">🏠</span>
-                    <span class="text-[10px] font-bold uppercase tracking-widest text-rose-600">Deptos & Airbnb</span>
-                </a>
-                <a id="link-autos" target="_blank" class="card-premium p-8 text-center hover:bg-emerald-50">
-                    <span class="text-3xl block mb-2">🚗</span>
-                    <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-600">Alquiler de Autos</span>
-                </a>
-            </section>
-
-            <div id="lista-puntos" class="grid grid-cols-1 md:grid-cols-2 gap-10"></div>
-
-            <div class="card-premium p-12 bg-slate-900 text-white shadow-2xl">
-                <h3 class="text-blue-400 font-bold text-xs uppercase tracking-widest mb-10">Soporte y Seguridad en Destino</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                    <div class="space-y-4">
-                        <p id="c-n" class="font-bold"></p>
-                        <a id="c-m" target="_blank" class="text-xs text-blue-400 underline underline-offset-4 uppercase tracking-tighter">Ubicar en Mapa</a>
-                    </div>
-                    <div class="space-y-4">
-                        <p id="h-n" class="font-bold"></p>
-                        <a id="h-m" target="_blank" class="text-xs text-blue-400 underline underline-offset-4 uppercase tracking-tighter">Servicio Médico</a>
-                    </div>
-                    <div class="space-y-4">
-                        <p id="p-n" class="font-bold"></p>
-                        <a id="p-m" target="_blank" class="text-xs text-blue-400 underline underline-offset-4 uppercase tracking-tighter">Policía Local</a>
-                    </div>
+                <div class="card-premium p-10 bg-blue-700 text-white">
+                    <h4 class="font-bold text-[10px] uppercase tracking-widest mb-4 opacity-75">Documentación</h4>
+                    <p id="req" class="text-sm font-light"></p>
                 </div>
             </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <a id="link-booking" target="_blank" class="card-premium p-6 text-center hover:scale-105 transition-transform">
+                    <span class="block text-xs font-bold uppercase text-blue-700">Booking / Hoteles</span>
+                </a>
+                <a id="link-airbnb" target="_blank" class="card-premium p-6 text-center hover:scale-105 transition-transform">
+                    <span class="block text-xs font-bold uppercase text-rose-600">Airbnb / Privados</span>
+                </a>
+                <a id="link-autos" target="_blank" class="card-premium p-6 text-center hover:scale-105 transition-transform">
+                    <span class="block text-xs font-bold uppercase text-emerald-600">Alquiler de Autos</span>
+                </a>
+            </div>
+
+            <div id="lista-puntos" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
         </div>
     </main>
 
@@ -123,6 +119,9 @@
             const dest = document.getElementById('dest').value;
             const nac = document.getElementById('nac').value;
             const estilo = document.getElementById('estilo').value;
+            const idioma = document.getElementById('idioma').value;
+            const moneda = document.getElementById('moneda').value;
+            
             if(!dest || !nac) return;
 
             document.getElementById('res').classList.add('hidden');
@@ -135,44 +134,44 @@
                     body: JSON.stringify({
                         destino: dest, nacionalidad: nac, estilo: estilo,
                         perfil: document.getElementById('perfil').value,
-                        idioma: document.getElementById('idioma').value
+                        idioma: idioma, moneda: moneda
                     })
                 });
                 const d = await r.json();
 
-                // Actualizar Textos
                 document.getElementById('b').innerText = d.b;
                 document.getElementById('req').innerText = d.requisitos;
-                document.getElementById('c-n').innerText = d.servicios.consulado.n;
-                document.getElementById('c-m').href = d.servicios.consulado.m;
-                document.getElementById('h-n').innerText = d.servicios.hospital.n;
-                document.getElementById('h-m').href = d.servicios.hospital.m;
-                document.getElementById('p-n').innerText = d.servicios.policia.n;
-                document.getElementById('p-m').href = d.servicios.policia.m;
 
-                // Actualizar Links de Logística
-                document.getElementById('link-booking').href = `https://www.booking.com/searchresults.html?ss=${dest}`;
+                // Lógica de Links con Filtros de Clase
+                let filter = estilo === "premium" ? "&nflt=class%3D5" : estilo === "economico" ? "&nflt=ht_id%3D203" : "";
+                document.getElementById('link-booking').href = `https://www.booking.com/searchresults.html?ss=${dest}${filter}`;
                 document.getElementById('link-airbnb').href = `https://www.airbnb.com/s/${dest}/homes`;
                 document.getElementById('link-autos').href = `https://www.rentalcars.com/search-results?locationName=${dest}`;
 
                 const list = document.getElementById('lista-puntos');
                 list.innerHTML = "";
-                d.puntos.forEach((p, i) => {
-                    // Foto mucho más específica usando el nombre del lugar y la ciudad
-                    const fotoUrl = `https://images.unsplash.com/photo-1?auto=format&fit=crop&q=80&w=800&h=500&sig=${Math.random() * 100}&content=tourism,${encodeURIComponent(p.n)},${encodeURIComponent(dest)}`;
-                    
+                
+                d.puntos.forEach(p => {
+                    // Mejora en la lógica de búsqueda de imágenes
+                    const cleanKey = p.key.replace(/\s+/g, '-').toLowerCase();
+                    const finalImg = `https://images.unsplash.com/photo-1549144511-f099e773c147?auto=format&fit=crop&q=80&w=800&sig=${Math.random()}`; 
+                    // Usamos una API de respaldo para fotos más precisas
+                    const fallbackImg = `https://loremflickr.com/800/500/${encodeURIComponent(p.n)},city,${encodeURIComponent(dest)}/all`;
+
                     list.innerHTML += `
                         <div class="card-premium card-point overflow-hidden">
-                            <img src="${fotoUrl}" class="w-full h-64 object-cover" onerror="this.src='https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800'">
+                            <div class="h-64 bg-slate-100 overflow-hidden">
+                                <img src="${fallbackImg}" class="w-full h-full object-cover">
+                            </div>
                             <div class="p-8">
                                 <div class="flex justify-between items-start mb-4">
-                                    <h4 class="text-xl font-bold">${p.n}</h4>
-                                    <span class="text-[10px] font-black uppercase text-blue-700 bg-blue-50 px-3 py-1 rounded-full">${p.p}</span>
+                                    <h4 class="text-xl font-bold text-slate-900">${p.n}</h4>
+                                    <span class="text-[9px] font-black text-blue-700 bg-blue-50 px-3 py-1 rounded-full uppercase">${p.p}</span>
                                 </div>
-                                <p class="text-sm text-slate-500 italic mb-6">"${p.s}"</p>
+                                <p class="text-xs text-slate-500 mb-6 italic leading-relaxed">"${p.s}"</p>
                                 <div class="grid grid-cols-2 gap-3">
-                                    <a href="${p.link}" target="_blank" class="bg-blue-700 text-white text-center py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest shadow-lg">Tickets & Tours</a>
-                                    <a href="https://www.google.com/maps/search/${encodeURIComponent(p.n)}+${dest}" target="_blank" class="bg-slate-100 text-slate-600 text-center py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-slate-200">Mapa</a>
+                                    <a href="https://www.civitatis.com/es/${dest}/" target="_blank" class="bg-blue-700 text-white text-center py-3 rounded-xl text-[9px] font-bold uppercase tracking-widest">Tickets & Tours</a>
+                                    <a href="https://www.google.com/maps/search/$?q=${encodeURIComponent(p.n)}+${dest}" target="_blank" class="bg-slate-50 text-slate-600 text-center py-3 rounded-xl text-[9px] font-bold uppercase tracking-widest">Ubicación</a>
                                 </div>
                             </div>
                         </div>
@@ -184,7 +183,7 @@
 
             } catch (e) {
                 document.getElementById('load').classList.add('hidden');
-                alert("Error de conexión con el Concierge.");
+                alert("Error al contactar con el Concierge.");
             }
         }
     </script>

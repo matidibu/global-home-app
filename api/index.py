@@ -21,22 +21,37 @@ def generate():
         nac = data.get('nacionalidad')
         estilo = data.get('estilo')
         perfil = data.get('perfil')
-        idioma = data.get('idioma', 'Español')
+        idioma = data.get('idioma')
+        moneda_nac = data.get('moneda') # Ej: ARS, MXN, EUR
         
         prompt = f"""
-        Actúa como un Consultor de Viajes Senior. Genera una guía en {idioma} para un {nac} en {dest}.
-        Estilo: {estilo}, Perfil: {perfil}.
+        Actúa como un Concierge VIP Internacional. Genera una guía en {idioma}.
+        Perfil: {perfil} | Nivel: {estilo.upper()} | Viajero de: {nac}.
+        
+        INSTRUCCIÓN DE MONEDA:
+        Para cada precio mencionado en 'puntos', indica el costo estimado en:
+        1. Moneda local de {dest}.
+        2. Moneda del viajero ({moneda_nac}).
+        3. Dólares Estadounidenses (USD).
+
         Responde estrictamente en JSON:
         {{
-            "b": "Bienvenida profesional",
-            "requisitos": "Lista de requisitos de entrada (Visas, seguros, pasaporte)",
+            "b": "Bienvenida cálida y profesional",
+            "requisitos": "Visa, pasaportes y tasas para {nac} entrando a {dest}",
             "servicios": {{
-                "consulado": {{"n": "Consulado de {nac}", "m": "https://www.google.com/maps/search/consulado+{nac}+{dest}"}},
-                "hospital": {{"n": "Hospital de Referencia", "m": "https://www.google.com/maps/search/hospital+{dest}"}},
-                "policia": {{"n": "Policía Local", "m": "https://www.google.com/maps/search/police+station+{dest}"}}
+                "consulado": {{"n": "Representación de {nac}", "m": "http://googleusercontent.com/maps.google.com/search?q=consulate+{nac}+{dest}"}},
+                "hospital": {{"n": "Hospital de Referencia {estilo}", "m": "http://googleusercontent.com/maps.google.com/search?q=hospital+{dest}"}},
+                "policia": {{"n": "Seguridad Central", "m": "http://googleusercontent.com/maps.google.com/search?q=police+station+{dest}"}}
             }},
             "puntos": [
-                {{"n": "Lugar", "h": "Horario", "p": "Precio", "t": "Transporte", "s": "Tip experto", "img_keywords": "famous landmark {dest}"}}
+                {{
+                    "n": "Nombre del lugar", 
+                    "h": "Horarios sugeridos", 
+                    "p": "Costo en moneda local / {moneda_nac} / USD", 
+                    "t": "Transporte recomendado", 
+                    "s": "Consejo de experto",
+                    "key": "Lugar emblemático de {dest}"
+                }}
             ]
         }}
         """
