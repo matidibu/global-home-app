@@ -24,21 +24,21 @@ def generate():
         Destino: {dest}. Viajero: {nac}. Estilo: {estilo.upper()}.
         
         REQUISITOS:
-        - Ortografía perfecta y mayúsculas en nombres propios.
+        - Ortografía perfecta. Nombres de lugares con Mayúscula.
         - Precios SOLO en USD y EUR (Ej: 50 USD / 46 EUR).
         
         Responde en JSON:
         {{
-            "b": "Bienvenida breve y elegante",
-            "requisitos": "Visas, salud y trámites para {nac} en {dest}",
+            "b": "Bienvenida elegante",
+            "requisitos": "Visas y trámites para {nac} en {dest}",
             "puntos": [
                 {{
                     "n": "Nombre Del Lugar",
                     "h": "Horarios",
                     "p": "XX USD / XX EUR",
-                    "t": "Transporte VIP",
-                    "s": "Tip de experto",
-                    "img_term": "architecture {dest} {estilo}" 
+                    "t": "Transporte",
+                    "s": "Tip experto",
+                    "search_term": "{dest} {estilo} landmark"
                 }}
             ]
         }}
