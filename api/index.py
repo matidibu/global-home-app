@@ -23,23 +23,23 @@ def generate():
         perfil = data.get('perfil')
         idioma = data.get('idioma', 'Español')
         
+        # Prompt optimizado para asegurar datos
         prompt = f"""
-        Actúa como un Asesor de Viajes Senior. Cliente: {nac}, Destino: {dest}, Estilo: {estilo}, Perfil: {perfil}.
-        Idioma: {idioma}.
-        Responde en JSON con:
-        'b': Bienvenida vital y profesional.
-        'requisitos': 'Lista detallada de requisitos de entrada para un {nac} a {dest} (Visa, pasaporte, seguros, etc.)',
-        'clima': 'Información climática útil',
-        'servicios': {{
-            'consulado': {{'n': 'Embajada/Consulado de {nac}', 'm': 'https://www.google.com/maps/search/{nac}+embassy+{dest}'}},
-            'hospital': {{'n': 'Hospital de Alta Complejidad', 'm': 'https://www.google.com/maps/search/hospital+{dest}'}},
-            'policia': {{'n': 'Centro de Seguridad Local', 'm': 'https://www.google.com/maps/search/police+station+{dest}'}}
-        }},
-        'puntos': [{{
-            'n': 'Lugar', 'h': 'Horarios', 'p': 'Precios aproximados', 't': 'Cómo llegar', 's': 'Consejo de experto para {perfil}',
-            'key': 'English location name for photo search',
-            'link': 'https://www.civitatis.com/es/{dest}/'
-        }}] (5 puntos)
+        Como Asesor Senior, genera una guía en {idioma} para un {nac} viajando a {dest}.
+        Estilo: {estilo}, Perfil: {perfil}.
+        Responde exclusivamente en JSON con esta estructura:
+        {{
+            "b": "Bienvenida vital",
+            "requisitos": "Lista de 3 a 5 requisitos migratorios (Visa, Pasaporte, etc)",
+            "servicios": {{
+                "consulado": {{"n": "Embajada de {nac}", "m": "https://www.google.com/maps/search/embassy+{nac}+{dest}"}},
+                "hospital": {{"n": "Hospital de Referencia", "m": "https://www.google.com/maps/search/hospital+{dest}"}},
+                "policia": {{"n": "Seguridad Local", "m": "https://www.google.com/maps/search/police+{dest}"}}
+            }},
+            "puntos": [
+                {{"n": "Nombre", "h": "Horarios", "p": "Precio", "t": "Transporte", "s": "Tip experto", "key": "Nombre en inglés para fotos"}}
+            ]
+        }}
         """
 
         completion = client.chat.completions.create(
