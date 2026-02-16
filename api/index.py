@@ -15,33 +15,29 @@ def home():
 @app.route('/api/generate', methods=['POST'])
 def generate():
     try:
-        # Recuperamos la clave
-        api_key = os.environ.get("GROQ_API_KEY")
-        if not api_key:
-            return jsonify({"error": "Falta configurar la GROQ_API_KEY en Vercel"}), 500
+        # Recuperamos la clave de las variables de entorno de Vercel
+        key = os.environ.get("GROQ_API_KEY")
+        if not key:
+            return jsonify({"error": "No se encontró la GROQ_API_KEY en Vercel"}), 500
 
-        # Iniciamos el cliente de IA
-        client = Groq(api_key=api_key)
-        
+        client = Groq(api_key=key)
         data = request.json
         dest = data.get('destino', 'Madrid')
         nac = data.get('nacionalidad', 'Argentino')
         
-        # Le pedimos a la IA una respuesta ultra-corta para que no tarde
-        prompt = f"Responde solo un JSON con estas llaves: 'b' (bienvenida corta a {dest}), 'p' (lista de 3 puntos interes), 'e' (consejo seguridad para {nac} en {dest})."
+        # Prompt super simplificado para evitar errores de la IA
+        system_prompt = f"Eres un concierge. Responde solo en JSON con llaves 'b' (bienvenida), 'p' (lista de 3 imperdibles), 'e' (consejo seguridad para {nac} en {dest})."
 
         completion = client.chat.completions.create(
-            model="llama3-8b-8192",
-            messages=[{"role": "user", "content": prompt}],
+            model="llama-3.3-70b-versatile",
+            messages=[{"role": "user", "content": system_prompt}],
             response_format={"type": "json_object"},
-            temperature=0.2
+            temperature=0.1
         )
         
         return jsonify(json.loads(completion.choices[0].message.content))
-
     except Exception as e:
-        # Si la API de Groq da error (por ejemplo, clave inválida o cupo lleno), 
-        # lo capturamos y lo enviamos al front-end para saber qué pasó.
+        # Esto nos va a decir el error real en la alerta de la página
         return jsonify({"error": str(e)}), 500
 
 app = app
