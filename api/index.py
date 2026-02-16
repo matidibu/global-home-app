@@ -21,24 +21,24 @@ def generate():
         nac = data.get('nacionalidad', 'Argentino')
         
         prompt = f"""
-        Eres un Concierge de Lujo para 'Global Home Assist'.
-        Destino: {dest}, Pasajero: {nac}.
-        Responde estrictamente en JSON con:
-        'b': Bienvenida elegante y tranquilizadora.
-        'clima': Info del clima.
+        Concierge Premium para {nac} en {dest}. Responde JSON:
+        'b': Bienvenida inspiradora.
+        'clima': Info clima actual.
         'servicios': {{
-            'consulado': {{'info': 'Nombre y dirección', 'maps': 'Link Google Maps'}},
-            'hospital': {{'info': 'Nombre y dirección', 'maps': 'Link Google Maps'}},
-            'policia': {{'info': 'Estación central/emergencia', 'maps': 'Link Google Maps'}}
+            'consulado': {{'n': 'Embajada/Consulado {nac}', 'm': 'https://www.google.com/maps/search/consulado+{nac}+{dest}'}},
+            'hospital': {{'n': 'Hospital principal de {dest}', 'm': 'https://www.google.com/maps/search/hospital+{dest}'}},
+            'policia': {{'n': 'Policía local de {dest}', 'm': 'https://www.google.com/maps/search/police+{dest}'}}
         }},
-        'puntos': [5 lugares con: 'n' (nombre), 'h' (horario), 'p' (precio), 't' (transporte), 's' (tip), 'img' (URL imagen Unsplash sobre {dest} y el lugar), 'link' (Civitatis), 'maps' (Google Maps)]
+        'puntos': [{{
+            'n': 'Lugar', 'h': 'Horario', 'p': 'Precio', 't': 'Bus/Metro', 's': 'Tip pro',
+            'link': 'https://www.civitatis.com/es/{dest}/'
+        }}] (Lista de 5 lugares importantes)
         """
 
         completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[{"role": "user", "content": prompt}],
-            response_format={"type": "json_object"},
-            temperature=0.3
+            response_format={"type": "json_object"}
         )
         
         return jsonify(json.loads(completion.choices[0].message.content))
