@@ -22,21 +22,26 @@ def generate():
         
         prompt = f"""
         Actúa como guía de élite. Para un {nac} en {dest}, responde SOLO un JSON con:
-        'b': Bienvenida, 'clima': Clima, 'h': Hospital, 'c': Consulado, 'e': Seguridad.
+        'b': Bienvenida corta,
+        'clima': Descripción del clima,
+        'h': Hospital recomendado,
+        'c': Consulado de {nac} en {dest},
+        'e': Protocolo seguridad,
         'puntos': Una lista de 5 objetos, cada uno con:
-           'n': Nombre del lugar.
-           'h': Horarios.
-           'p': Precio.
-           't': Transporte/Cómo llegar.
-           's': Sugerencia experta.
-           'link': Link de reserva (Civitatis/GYG).
-           'maps': Link de búsqueda de Google Maps para ese lugar en esa ciudad.
+           'n': Nombre del lugar,
+           'h': Horarios,
+           'p': Precio,
+           't': Transporte,
+           's': Sugerencia experta,
+           'link': Link de búsqueda en Civitatis para {dest},
+           'maps': Link de Google Maps para el lugar en {dest}
         """
 
         completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[{"role": "user", "content": prompt}],
-            response_format={"type": "json_object"}
+            response_format={"type": "json_object"},
+            temperature=0.2
         )
         
         return jsonify(json.loads(completion.choices[0].message.content))
