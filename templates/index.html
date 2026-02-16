@@ -10,24 +10,24 @@
         @keyframes dots { 0%, 20% { content: ' .'; } 40% { content: ' ..'; } 60% { content: ' ...'; } 80%, 100% { content: ''; } }
     </style>
 </head>
-<body class="bg-slate-50 font-sans text-slate-900">
-    <header class="bg-indigo-900 text-white py-10 px-6 text-center shadow-lg">
+<body class="bg-slate-100 font-sans text-slate-900">
+    <header class="bg-indigo-900 text-white py-12 px-6 text-center shadow-lg">
         <h1 class="text-3xl font-bold tracking-tight uppercase">Global Home Assist</h1>
-        <p class="text-indigo-300 mt-2 text-lg italic italic">Tu viaje, bajo control</p>
+        <p class="text-indigo-300 mt-2 text-lg italic">Tu concierge inteligente</p>
     </header>
 
-    <main class="max-w-xl mx-auto -mt-8 p-4 pb-20">
-        <div class="bg-white rounded-3xl shadow-2xl p-6 border border-slate-100">
+    <main class="max-w-xl mx-auto -mt-8 p-4 pb-24">
+        <div class="bg-white rounded-3xl shadow-2xl p-6 border border-slate-200">
             <div class="space-y-3">
                 <input type="text" id="nacionalidad" placeholder="Tu nacionalidad" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500">
                 <input type="text" id="destino" placeholder="Ciudad de destino" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500">
                 <button onclick="generarAsistencia()" id="btn-enviar" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-2xl transition-all shadow-lg active:scale-95">
-                    PLANIFICAR MI LLEGADA
+                    PLANIFICAR MI VIAJE
                 </button>
             </div>
 
             <div id="loader" class="hidden mt-8 text-center text-indigo-600 font-medium loading-dots">
-                Organizando tu estadía
+                Conectando con guías en destino
             </div>
 
             <div id="resultado" class="hidden mt-8 space-y-6">
@@ -38,39 +38,45 @@
                 <div class="grid grid-cols-3 gap-3">
                     <a id="link-hotel" target="_blank" class="bg-white p-4 rounded-2xl border border-slate-200 text-center shadow-sm hover:bg-slate-50">
                         <span class="block text-2xl mb-1">🏨</span>
-                        <span class="text-[10px] font-bold text-slate-500">HOTEL</span>
+                        <span class="text-[10px] font-bold text-slate-500 uppercase">Hotel</span>
                     </a>
                     <a id="link-auto" target="_blank" class="bg-white p-4 rounded-2xl border border-slate-200 text-center shadow-sm hover:bg-slate-50">
                         <span class="block text-2xl mb-1">🚗</span>
-                        <span class="text-[10px] font-bold text-slate-500">AUTO</span>
+                        <span class="text-[10px] font-bold text-slate-500 uppercase">Auto</span>
                     </a>
                     <a id="link-tickets" target="_blank" class="bg-white p-4 rounded-2xl border border-slate-200 text-center shadow-sm hover:bg-slate-50">
                         <span class="block text-2xl mb-1">🎟️</span>
-                        <span class="text-[10px] font-bold text-slate-500">TICKETS</span>
+                        <span class="text-[10px] font-bold text-slate-500 uppercase">Tickets</span>
                     </a>
                 </div>
 
-                <div class="p-6 bg-white rounded-2xl border border-slate-100 shadow-sm">
-                    <h3 class="font-bold text-slate-800 mb-3 uppercase text-xs tracking-wider">📍 Imperdibles en la ciudad</h3>
+                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-3 text-xs uppercase tracking-widest">📍 Lugares Imperdibles</h3>
                     <ul id="puntos" class="space-y-2 text-sm text-slate-600"></ul>
                 </div>
 
                 <div class="p-5 bg-red-50 rounded-2xl border border-red-100">
-                    <h4 class="font-bold text-red-700 text-sm mb-2">🆘 Protocolo de Emergencia</h4>
+                    <h4 class="font-bold text-red-700 text-xs mb-2 uppercase">🆘 Seguridad Consular</h4>
                     <p id="emergencia" class="text-xs text-slate-600 leading-relaxed"></p>
                 </div>
+
+                <button onclick="enviarWhatsApp()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-2xl transition-all shadow-md flex items-center justify-center gap-2">
+                    <span>📱</span> ENVIAR A MI WHATSAPP
+                </button>
             </div>
         </div>
     </main>
 
     <script>
+        let datosActuales = null;
+
         async function generarAsistencia() {
             const nac = document.getElementById('nacionalidad').value;
             const dest = document.getElementById('destino').value;
             const resDiv = document.getElementById('resultado');
             const loader = document.getElementById('loader');
             
-            if(!nac || !dest) return alert("Por favor, llena los campos.");
+            if(!nac || !dest) return alert("Faltan datos.");
 
             resDiv.classList.add('hidden');
             loader.classList.remove('hidden');
@@ -81,34 +87,44 @@
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({nacionalidad: nac, destino: dest})
                 });
-                const data = await response.json();
+                datosActuales = await response.json();
 
-                if(data.error) throw new Error(data.error);
+                if(datosActuales.error) throw new Error(datosActuales.error);
 
-                document.getElementById('bienvenida').innerText = data.bienvenida;
-                document.getElementById('emergencia').innerText = data.emergencia;
+                document.getElementById('bienvenida').innerText = datosActuales.bienvenida;
+                document.getElementById('emergencia').innerText = datosActuales.emergencia;
                 
-                // Links
-                document.getElementById('link-hotel').href = data.hospedaje_url;
-                document.getElementById('link-auto').href = data.autos_url;
-                document.getElementById('link-tickets').href = data.tickets_url;
+                document.getElementById('link-hotel').href = datosActuales.hospedaje_url;
+                document.getElementById('link-auto').href = datosActuales.autos_url;
+                document.getElementById('link-tickets').href = datosActuales.tickets_url;
 
-                // Lista de puntos
                 const lista = document.getElementById('puntos');
                 lista.innerHTML = "";
-                data.puntos_interes.forEach(item => {
-                    const li = document.createElement('li');
-                    li.innerText = "• " + item;
-                    lista.appendChild(li);
+                datosActuales.puntos_interes.forEach(item => {
+                    lista.innerHTML += `<li>• ${item}</li>`;
                 });
 
                 loader.classList.add('hidden');
                 resDiv.classList.remove('hidden');
             } catch (error) {
-                console.error(error);
-                alert("La IA está tardando en responder. Intenta de nuevo en un segundo.");
+                alert("La IA está tardando. Prueba una vez más.");
                 loader.classList.add('hidden');
             }
+        }
+
+        function enviarWhatsApp() {
+            if(!datosActuales) return;
+            const mensaje = `*Global Home Assist - Mi Viaje*%0A%0A` +
+                            `📍 *Destino:* ${document.getElementById('destino').value}%0A` +
+                            `✨ *Bienvenida:* ${datosActuales.bienvenida}%0A` +
+                            `🏛️ *Imperdibles:* ${datosActuales.puntos_interes.join(", ")}%0A` +
+                            `🆘 *Emergencia:* ${datosActuales.emergencia}%0A%0A` +
+                            `*Links útiles:*%0A` +
+                            `🏨 Hotel: ${datosActuales.hospedaje_url}%0A` +
+                            `🚗 Auto: ${datosActuales.autos_url}%0A` +
+                            `🎟️ Tickets: ${datosActuales.tickets_url}`;
+            
+            window.open(`https://wa.me/?text=${mensaje}`, '_blank');
         }
     </script>
 </body>
