@@ -21,18 +21,21 @@ def generate():
         nac = data.get('nacionalidad', 'Argentino')
         
         prompt = f"""
-        Concierge Premium para {nac} en {dest}. Responde JSON:
-        'b': Bienvenida inspiradora.
-        'clima': Info clima actual.
+        Actúa como un Concierge de Lujo. Destino: {dest}, Viajero: {nac}.
+        Responde en JSON con estos campos:
+        'b': Bienvenida sofisticada.
+        'clima': Breve estado del tiempo.
         'servicios': {{
-            'consulado': {{'n': 'Embajada/Consulado {nac}', 'm': 'https://www.google.com/maps/search/consulado+{nac}+{dest}'}},
-            'hospital': {{'n': 'Hospital principal de {dest}', 'm': 'https://www.google.com/maps/search/hospital+{dest}'}},
-            'policia': {{'n': 'Policía local de {dest}', 'm': 'https://www.google.com/maps/search/police+{dest}'}}
+            'consulado': {{'n': 'Embajada {nac}', 'm': 'https://www.google.com/maps/search/{nac}+embassy+{dest}'}},
+            'hospital': {{'n': 'Hospital Privado {dest}', 'm': 'https://www.google.com/maps/search/private+hospital+{dest}'}},
+            'policia': {{'n': 'Police Department', 'm': 'https://www.google.com/maps/search/police+station+{dest}'}}
         }},
         'puntos': [{{
-            'n': 'Lugar', 'h': 'Horario', 'p': 'Precio', 't': 'Bus/Metro', 's': 'Tip pro',
+            'n': 'Nombre en español', 
+            'key': 'Nombre en inglés para buscador de fotos',
+            'h': 'Horario', 'p': 'Precio', 't': 'Transporte', 's': 'Tip de lujo',
             'link': 'https://www.civitatis.com/es/{dest}/'
-        }}] (Lista de 5 lugares importantes)
+        }}] (Lista de 5)
         """
 
         completion = client.chat.completions.create(
