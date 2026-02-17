@@ -20,7 +20,7 @@
 
     <header class="max-w-7xl mx-auto flex justify-between items-center mb-10">
         <div class="flex items-center gap-4">
-            <img src="https://i.ibb.co/LhqZz1L/logo-global-home.png" alt="Logo" class="w-16 h-16 object-contain">
+            <img src="https://i.ibb.co/LhqZz1L/logo-global-home.png" alt="Global Home Assist Logo" class="w-16 h-16 object-contain">
             <div>
                 <h1 class="text-2xl font-extrabold tracking-tighter italic text-slate-800 uppercase leading-none">Global Home <span class="font-light text-slate-600">Assist</span></h1>
                 <p class="text-[9px] font-bold text-blue-700 tracking-[0.3em] uppercase mt-1">Premium Concierge</p>
@@ -31,13 +31,15 @@
     <main class="max-w-7xl mx-auto space-y-8">
         <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="glass-panel p-8 space-y-4 shadow-xl">
-                <h3 class="font-bold text-gray-800 text-xs uppercase border-b pb-2 tracking-widest">Configuración</h3>
-                <input type="text" id="nac" placeholder="Nacionalidad" class="w-full border-b p-2 outline-none bg-transparent">
-                <input type="text" id="dest" placeholder="Ciudad Destino" class="w-full border-b p-2 outline-none bg-transparent">
-                <select id="idioma" class="w-full border-b p-2 outline-none bg-transparent text-sm">
-                    <option value="Español">Español</option>
-                    <option value="Inglés">English</option>
-                </select>
+                <h3 class="font-bold text-gray-800 text-xs uppercase border-b pb-2 tracking-widest text-center">Configuración</h3>
+                <div class="space-y-3">
+                    <input type="text" id="nac" placeholder="Nacionalidad" class="w-full border-b p-2 outline-none bg-transparent">
+                    <input type="text" id="dest" placeholder="Ciudad Destino" class="w-full border-b p-2 outline-none bg-transparent">
+                    <select id="idioma" class="w-full border-b p-2 outline-none bg-transparent text-sm">
+                        <option value="Español">Español</option>
+                        <option value="Inglés">English</option>
+                    </select>
+                </div>
             </div>
 
             <div class="glass-panel p-8 flex flex-col justify-between shadow-xl">
@@ -49,21 +51,20 @@
             </div>
 
             <div class="bg-blue-800 text-white p-8 rounded-[2rem] shadow-2xl">
-                <h4 class="font-bold text-xs mb-3 border-b border-blue-400 pb-1 uppercase tracking-widest">Estatus Legal</h4>
-                <p id="req" class="text-xs leading-relaxed opacity-90 font-light italic">Esperando información...</p>
+                <h4 class="font-bold text-xs mb-3 border-b border-blue-400 pb-1 uppercase tracking-widest text-center">Estatus Legal</h4>
+                <p id="req" class="text-xs leading-relaxed opacity-90 font-light italic text-center">Complete los datos para sincronizar requisitos.</p>
             </div>
         </section>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <a id="l-booking" target="_blank" class="bg-white p-5 rounded-2xl shadow-sm hover:bg-blue-50 font-bold text-blue-900 text-xs uppercase">➔ Booking.com VIP Deals</a>
-            <a id="l-airbnb" target="_blank" class="bg-white p-5 rounded-2xl shadow-sm hover:bg-rose-50 font-bold text-rose-700 text-xs uppercase">🏠 Airbnb Residences</a>
-            <a id="l-autos" target="_blank" class="bg-white p-5 rounded-2xl shadow-sm hover:bg-emerald-50 font-bold text-emerald-700 text-xs uppercase">🚗 RentalCars Premium</a>
+            <a id="l-booking" target="_blank" class="bg-white p-5 rounded-2xl shadow-sm hover:bg-blue-50 font-bold text-blue-900 text-xs uppercase text-center border">➔ Booking.com</a>
+            <a id="l-airbnb" target="_blank" class="bg-white p-5 rounded-2xl shadow-sm hover:bg-rose-50 font-bold text-rose-700 text-xs uppercase text-center border">🏠 Airbnb</a>
+            <a id="l-autos" target="_blank" class="bg-white/90 p-5 rounded-2xl shadow-sm hover:bg-emerald-50 font-bold text-emerald-700 text-xs uppercase text-center border">🚗 RentalCars</a>
         </div>
 
-        <div id="load" class="hidden text-center text-slate-800 font-bold animate-pulse py-10 uppercase tracking-[0.4em]">Cargando Experiencias...</div>
+        <div id="load" class="hidden text-center text-slate-800 font-bold animate-pulse py-10 uppercase tracking-[0.4em]">Sincronizando...</div>
 
         <div id="res" class="hidden space-y-8">
-            <div id="b" class="glass-panel p-8 text-center text-gray-700 italic border-none shadow-md"></div>
             <div id="lista-puntos" class="grid grid-cols-1 md:grid-cols-3 gap-8 pb-20"></div>
         </div>
     </main>
@@ -89,37 +90,33 @@
                 });
                 const d = await r.json();
 
-                document.getElementById('b').innerText = d.b;
                 document.getElementById('req').innerText = d.requisitos;
 
-                const AID = "TU_ID"; // Pon tu ID de afiliado aquí
-                
-                // Actualizar Links de Logística
+                const AID = "TU_ID"; 
                 document.getElementById('l-booking').href = `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(params.destino)}&aid=${AID}`;
-                document.getElementById('l-airbnb').href = `https://www.airbnb.com/s/${encodeURIComponent(params.destino)}/homes`;
-                document.getElementById('l-autos').href = `https://www.rentalcars.com/search-results?locationName=${encodeURIComponent(params.destino)}`;
 
                 const list = document.getElementById('lista-puntos');
                 list.innerHTML = "";
                 
                 d.puntos.forEach(p => {
-                    // MOTOR DE IMAGEN POR PALABRAS CLAVE: Más preciso y estable
-                    const fotoUrl = `https://loremflickr.com/800/600/${encodeURIComponent(p.n.replace(/\s/g, ','))},city,architecture/all`;
+                    // MOTOR DE IMAGEN CORREGIDO: Buscador directo por URL sin bloqueos
+                    const query = encodeURIComponent(p.n + " " + params.destino);
+                    const fotoUrl = `https://loremflickr.com/800/600/${query}/all`;
 
                     list.innerHTML += `
                         <div class="card-point shadow-lg">
                             <div class="h-52 relative bg-slate-200">
-                                <img src="${fotoUrl}" class="w-full h-full object-cover">
+                                <img src="${fotoUrl}" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800'">
                                 <div class="absolute top-4 right-4 bg-white/95 px-3 py-1 rounded-full text-[10px] font-black text-blue-700 shadow-md">${p.p}</div>
                             </div>
-                            <div class="p-8 flex flex-col flex-grow">
+                            <div class="p-8 flex flex-grow flex-col">
                                 <h4 class="font-extrabold text-lg mb-2 uppercase tracking-tight text-slate-800">${p.n}</h4>
-                                <p class="text-[11px] text-gray-500 italic mb-6 leading-relaxed flex-grow">"${p.s}"</p>
-                                <div class="space-y-3 mt-auto">
-                                    <a href="https://www.getyourguide.com/s?q=${encodeURIComponent(p.n)}&customer_id=${AID}" target="_blank" class="block w-full text-center bg-blue-700 text-white py-3.5 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg">Reservar Experiencia</a>
-                                    <div class="grid grid-cols-2 gap-3">
-                                        <a href="https://www.google.com/search?q=${encodeURIComponent(p.n + ' official tickets')}&btnI" target="_blank" class="bg-slate-100 text-slate-600 text-center py-2.5 rounded-lg text-[9px] font-bold uppercase hover:bg-slate-200">Sitio Oficial</a>
-                                        <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.n + ' ' + params.destino)}" target="_blank" class="bg-slate-100 text-slate-600 text-center py-2.5 rounded-lg text-[9px] font-bold uppercase hover:bg-slate-200">Mapa</a>
+                                <p class="text-[11px] text-gray-500 italic mb-6 flex-grow">"${p.s}"</p>
+                                <div class="space-y-3">
+                                    <a href="https://www.getyourguide.com/s?q=${encodeURIComponent(p.n)}&customer_id=${AID}" target="_blank" class="block w-full text-center bg-blue-700 text-white py-3.5 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg">Reservar Tickets</a>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <a href="https://www.google.com/search?q=${encodeURIComponent(p.n + ' official site')}&btnI" target="_blank" class="bg-slate-100 text-slate-600 text-center py-2 rounded-lg text-[9px] font-bold uppercase">Sitio Oficial</a>
+                                        <a href="https://www.google.com/maps/search/${encodeURIComponent(p.n + ' ' + params.destino)}" target="_blank" class="bg-slate-100 text-slate-600 text-center py-2 rounded-lg text-[9px] font-bold uppercase">Ver Mapa</a>
                                     </div>
                                 </div>
                             </div>
@@ -129,7 +126,10 @@
 
                 document.getElementById('load').classList.add('hidden');
                 document.getElementById('res').classList.remove('hidden');
-            } catch (e) { alert("Error"); }
+            } catch (e) { 
+                document.getElementById('load').classList.add('hidden');
+                alert("Error de conexión"); 
+            }
         }
     </script>
 </body>
