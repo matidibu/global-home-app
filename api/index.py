@@ -14,36 +14,34 @@ def home():
 def generate():
     try:
         data = request.json
-        dest = data.get('destino', '').title()
-        nac = data.get('nacionalidad', '').title()
+        # Aseguramos que el destino y nacionalidad tengan mayúsculas
+        dest = data.get('destino', '').strip().title()
+        nac = data.get('nacionalidad', '').strip().title()
         idioma = data.get('idioma', 'Español')
         estilo = data.get('estilo', 'standard')
 
         prompt = f"""
-        Actúa como un Concierge VIP de élite. Genera una guía en {idioma}.
-        Destino: {dest}. Viajero de: {nac}. Nivel: {estilo.upper()}.
+        Eres un Concierge VIP experto. Genera una guía turística en {idioma}.
+        Destino: {dest}. Viajero de: {nac}. Estilo: {estilo.upper()}.
         
-        IMPORTANTE: 
-        1. Ortografía perfecta y mayúsculas en nombres.
-        2. Precios en USD y EUR (ej: 40 USD / 37 EUR).
-        3. El campo 'img_keyword' debe ser el nombre del lugar en INGLÉS para el buscador.
+        REGLAS CRÍTICAS:
+        1. Ortografía perfecta. Nombres de lugares SIEMPRE con Mayúscula.
+        2. Precios obligatorios en USD y EUR (ej: 50 USD / 46 EUR).
+        3. El campo 'n' debe ser el nombre del lugar.
         
-        Responde estrictamente en JSON:
+        Responde exclusivamente en este formato JSON:
         {{
-            "b": "Bienvenida sofisticada",
-            "requisitos": "Visas y salud para {nac} en {dest}",
+            "b": "Bienvenida elegante al viajero",
+            "requisitos": "Normativa de visas, salud y aduana para ciudadanos de {nac} que visitan {dest}",
             "puntos": [
                 {{
-                    "n": "Nombre Del Lugar",
-                    "h": "Horarios",
-                    "p": "XX USD / XX EUR",
-                    "t": "Transporte sugerido",
-                    "s": "Tip experto",
-                    "img_keyword": "Eiffel Tower"
+                    "n": "Nombre Del Monumento O Lugar",
+                    "p": "Precio USD / EUR",
+                    "s": "Tip de experto breve"
                 }}
             ]
         }}
-        Genera exactamente 5 puntos.
+        Genera 5 puntos de interés.
         """
 
         completion = client.chat.completions.create(
@@ -51,6 +49,7 @@ def generate():
             messages=[{"role": "user", "content": prompt}],
             response_format={"type": "json_object"}
         )
+        
         return jsonify(json.loads(completion.choices[0].message.content))
     except Exception as e:
         return jsonify({"error": str(e)}), 500
