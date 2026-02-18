@@ -17,29 +17,12 @@ def home():
 def generate():
     try:
         data = request.json
-        dest = data.get('destino', 'San Juan')
-        nac = data.get('nacionalidad', 'Argentino')
-        moneda_nac = data.get('moneda', 'USD')
+        dest = data.get('destino')
+        nac = data.get('nacionalidad')
+        moneda = data.get('moneda')
         
-        prompt = f"""
-        Actúa como Concierge VIP de Global Home Assist. Guía para {nac} en {dest}.
-        Responde exclusivamente en JSON:
-        {{
-            "bienvenida": "Texto elegante de bienvenida",
-            "requisitos": "Breve estatus legal y visas",
-            "puntos": [
-                {{
-                    "n": "Nombre del Lugar",
-                    "h": "Horario VIP",
-                    "p": "Precio en Local / {moneda_nac} / USD",
-                    "s": "Reseña corta y sofisticada",
-                    "img_keyword": "sigla del lugar para buscador de fotos"
-                }}
-            ]
-        }}
-        Genera 6 puntos turísticos de alta calidad.
-        """
-
+        prompt = f"Concierge VIP. Destino: {dest}, Viajero: {nac}. Responde SOLO JSON: {{'b': 'bienvenida', 'req': 'visas/tasas', 'puntos': [{{'n': 'nombre', 'h': 'horario', 'p': 'precio en {moneda}', 's': 'tip experto'}}]}}"
+        
         completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[{"role": "user", "content": prompt}],
