@@ -6,23 +6,29 @@ from groq import Groq
 
 app = Flask(__name__, template_folder='../templates')
 
-# Configuración de Claves desde Vercel
+# Cargamos las llaves desde las variables de entorno de Vercel
 GROQ_KEY = os.environ.get("GROQ_API_KEY")
 UNSPLASH_KEY = os.environ.get("UNSPLASH_ACCESS_KEY")
 
 client = Groq(api_key=GROQ_KEY)
 
-def buscar_foto(lugar):
+def buscar_foto_unsplash(lugar):
     try:
         url = "https://api.unsplash.com/search/photos"
-        params = {"query": lugar, "per_page": 1, "client_id": UNSPLASH_KEY}
-        r = requests.get(url, params=params)
+        params = {
+            "query": lugar, 
+            "per_page": 1, 
+            "orientation": "landscape",
+            "client_id": UNSPLASH_KEY
+        }
+        r = requests.get(url, params=params, timeout=5)
         data = r.json()
-        if data["results"]:
+        if data.get("results"):
             return data["results"][0]["urls"]["regular"]
-    except:
-        pass
-    return "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800"
+    except Exception as e:
+        print(f"Error Unsplash: {e}")
+    # Imagen de respaldo si falla la búsqueda
+    return "https://images.unsplash.com/photo-1500835595367-9917d9c4aaad?w=800"
 
 @app.route('/')
 def home():
@@ -32,10 +38,26 @@ def home():
 def generate():
     try:
         data = request.json
-        dest = data.get('destino', 'Paris').title()
+        dest = data.get('destino', 'Panamá').title()
+        nac = data.get('nacionalidad', 'Argentino').title()
         
-        # PROMPT AJUSTADO PARA EVITAR EL "UNDEFINED"
-        prompt = f"Genera 5 puntos turísticos para {dest}. Responde SOLO con un JSON con esta estructura: {{'b': 'Bienvenida', 'requisitos': 'Visas', 'puntos': [{{'n': 'Nombre', 's': 'Tip corto', 'p': 'Precio USD'}}]}}"
+        prompt = f"""
+        Eres un Concierge VIP de Global Home Assist.
+        Genera una guía para {dest} dirigida a un viajero de nacionalidad {nac}.
+        Responde estrictamente en formato JSON con esta estructura:
+        {{
+            "b": "Mensaje de bienvenida VIP",
+            "requisitos": "Breve info sobre visados y salud",
+            "puntos": [
+                {{
+                    "n": "Nombre del monumento o lugar",
+                    "s": "Tip exclusivo del lugar",
+                    "p": "Precio aprox en USD"
+                }}
+            ]
+        }}
+        Genera 5 puntos de interés.
+        """
         
         completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
@@ -43,12 +65,12 @@ def generate():
             response_format={"type": "json_object"}
         )
         
-        res = json.loads(completion.choices[0].message.content)
+        guia = json.loads(completion.choices[0].message.content)
 
-        # Buscamos la foto real para cada punto
-        for p in res['puntos']:
-            p['imagen_url'] = buscar_foto(f"{p['n']} {dest}")
+        # Inyectamos las URLs de las fotos reales antes de enviar al frontend
+        for punto in guia['puntos']:
+            punto['imagen_url'] = buscar_foto_unsplash(f"{punto['n']} {dest}")
             
-        return jsonify(res)
+        return jsonify(guia)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
