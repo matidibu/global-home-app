@@ -3,6 +3,7 @@ import json
 from flask import Flask, render_template, request, jsonify
 from groq import Groq
 
+# Configuración de rutas para Vercel
 base_dir = os.path.dirname(os.path.abspath(__file__))
 template_dir = os.path.join(base_dir, '..', 'templates')
 
@@ -22,7 +23,7 @@ def generate():
         estilo = data.get('estilo')
         perfil = data.get('perfil')
         idioma = data.get('idioma')
-        moneda_nac = data.get('moneda') # Ej: ARS, MXN, EUR
+        moneda_nac = data.get('moneda')
         
         prompt = f"""
         Actúa como un Concierge VIP Internacional. Genera una guía en {idioma}.
@@ -34,7 +35,7 @@ def generate():
         2. Moneda del viajero ({moneda_nac}).
         3. Dólares Estadounidenses (USD).
 
-        Responde estrictamente en JSON:
+        Responde estrictamente en JSON con esta estructura:
         {{
             "b": "Bienvenida cálida y profesional",
             "requisitos": "Visa, pasaportes y tasas para {nac} entrando a {dest}",
