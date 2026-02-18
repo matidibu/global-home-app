@@ -19,41 +19,38 @@ def generate():
         data = request.json
         dest = data.get('destino')
         nac = data.get('nacionalidad')
-        estilo = data.get('estilo') # economico, standard, premium
+        estilo = data.get('estilo')
         perfil = data.get('perfil')
-        idioma = data.get('idioma', 'Español')
+        idioma = data.get('idioma')
+        moneda_nac = data.get('moneda') # Ej: ARS, MXN, EUR
         
-        # Lógica de refinamiento de búsqueda para la IA
-        contexto_clase = {
-            "economico": "enfócate en hostels, comida callejera de alta calidad, museos gratuitos y transporte público eficiente.",
-            "standard": "enfócate en hoteles 3-4 estrellas, restaurantes recomendados por locales, tours grupales y comodidad equilibrada.",
-            "premium": "enfócate en hoteles de lujo 5 estrellas, experiencias exclusivas, gastronomía de autor, transporte privado y lugares con acceso VIP. Incluye también los hitos históricos pero desde una perspectiva de exclusividad."
-        }
-
         prompt = f"""
-        Actúa como un Concierge de Élite. Genera una guía en {idioma} para un {nac} en {dest}.
-        Nivel de servicio solicitado: {estilo.upper()}.
-        Perfil del viajero: {perfil}.
+        Actúa como un Concierge VIP Internacional. Genera una guía en {idioma}.
+        Perfil: {perfil} | Nivel: {estilo.upper()} | Viajero de: {nac}.
         
-        Criterios de selección para {estilo}: {contexto_clase.get(estilo)}
+        INSTRUCCIÓN DE MONEDA:
+        Para cada precio mencionado en 'puntos', indica el costo estimado en:
+        1. Moneda local de {dest}.
+        2. Moneda del viajero ({moneda_nac}).
+        3. Dólares Estadounidenses (USD).
 
-        Responde en JSON:
+        Responde estrictamente en JSON:
         {{
-            "b": "Bienvenida acorde al estatus {estilo}",
-            "requisitos": "Requisitos legales específicos para {nac}",
+            "b": "Bienvenida cálida y profesional",
+            "requisitos": "Visa, pasaportes y tasas para {nac} entrando a {dest}",
             "servicios": {{
-                "consulado": {{"n": "Consulado {nac}", "m": "https://www.google.com/maps/search/consulado+{nac}+{dest}"}},
-                "hospital": {{"n": "Centro médico de alta complejidad", "m": "https://www.google.com/maps/search/best+hospital+{dest}"}},
-                "policia": {{"n": "Estación de policía central", "m": "https://www.google.com/maps/search/police+station+{dest}"}}
+                "consulado": {{"n": "Representación de {nac}", "m": "http://googleusercontent.com/maps.google.com/search?q=consulate+{nac}+{dest}"}},
+                "hospital": {{"n": "Hospital de Referencia {estilo}", "m": "http://googleusercontent.com/maps.google.com/search?q=hospital+{dest}"}},
+                "policia": {{"n": "Seguridad Central", "m": "http://googleusercontent.com/maps.google.com/search?q=police+station+{dest}"}}
             }},
             "puntos": [
                 {{
                     "n": "Nombre del lugar", 
-                    "h": "Horarios VIP", 
-                    "p": "Precio acorde a {estilo}", 
-                    "t": "Transporte sugerido", 
-                    "s": "Tip de experto",
-                    "img_search": "high quality photo of {dest} landmark"
+                    "h": "Horarios sugeridos", 
+                    "p": "Costo en moneda local / {moneda_nac} / USD", 
+                    "t": "Transporte recomendado", 
+                    "s": "Consejo de experto",
+                    "key": "Lugar emblemático de {dest}"
                 }}
             ]
         }}
