@@ -4,30 +4,42 @@ import requests
 from flask import Flask, render_template, request, jsonify
 from groq import Groq
 
+# Configuración inicial
 app = Flask(__name__, template_folder='../templates')
-client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
-# TU CLAVE DE ACCESO ACTIVADA
-UNSPLASH_ACCESS_KEY = "TiIhQkMxP3EEe_RcSsaADorW4HvGDtT1LU3AREOsfus"
+# Cargamos las llaves desde las Variables de Entorno de Vercel
+# Asegúrate de haberlas configurado en el panel de Vercel como:
+# GROQ_API_KEY y UNSPLASH_ACCESS_KEY
+GROQ_KEY = os.environ.get("GROQ_API_KEY")
+UNSPLASH_KEY = os.environ.get("UNSPLASH_ACCESS_KEY")
 
-def buscar_foto_real(lugar, ciudad):
+client = Groq(api_key=GROQ_KEY)
+
+def buscar_foto_unsplash(lugar, ciudad):
+    """
+    Función que conecta con Unsplash para traer la imagen profesional.
+    """
+    if not UNSPLASH_KEY:
+        return "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800"
+
     try:
         url = "https://api.unsplash.com/search/photos"
-        # Buscamos por el nombre del lugar y la ciudad para mayor precisión
         params = {
             "query": f"{lugar} {ciudad} architecture",
             "per_page": 1,
             "orientation": "landscape",
-            "client_id": UNSPLASH_ACCESS_KEY
+            "client_id": UNSPLASH_KEY
         }
-        response = requests.get(url, params=params)
+        response = requests.get(url, params=params, timeout=5)
         data = response.json()
-        if data["results"]:
+        
+        if data.get("results"):
             return data["results"][0]["urls"]["regular"]
-    except:
-        pass
-    # Imagen de respaldo si la API falla o no encuentra nada
-    return "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800"
+    except Exception as e:
+        print(f"Error en Unsplash: {e}")
+    
+    # Imagen de respaldo si falla la búsqueda
+    return "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800"
 
 @app.route('/')
 def home():
@@ -36,41 +48,54 @@ def home():
 @app.route('/api/generate', methods=['POST'])
 def generate():
     try:
+        # 1. Recibir datos del frontend
         data = request.json
-        dest = data.get('destino', '').strip().title()
-        nac = data.get('nacionalidad', '').strip().title()
-        
-        # Prompt optimizado para obtener términos de búsqueda precisos
+        destino = data.get('destino', '').strip().title()
+        nacionalidad = data.get('nacionalidad', '').strip().title()
+
+        if not destino or not nacionalidad:
+            return jsonify({"error": "Faltan datos obligatorios"}), 400
+
+        # 2. Consultar a la IA (Groq) para generar el contenido
         prompt = f"""
-        Actúa como Concierge VIP. Genera una guía para {dest} (viajero de {nac}).
-        Responde estrictamente en JSON con esta estructura:
+        Actúa como un Concierge VIP de Global Home Assist. 
+        Genera una guía de viaje para un ciudadano de {nacionalidad} que visita {destino}.
+        
+        Responde estrictamente en formato JSON con esta estructura:
         {{
-            "b": "Bienvenida personalizada",
-            "r": "Requisitos de visa/salud",
+            "bienvenida": "Un saludo elegante y breve",
+            "requisitos": "Breve resumen de visas o salud para {nacionalidad} en {destino}",
             "puntos": [
                 {{
-                    "n": "Nombre del lugar (en mayúsculas)",
-                    "p": "Precio en USD/EUR",
-                    "s": "Tip experto breve",
-                    "q": "Nombre del monumento en INGLÉS para el buscador de fotos"
+                    "nombre": "Nombre del monumento o lugar (con mayúsculas)",
+                    "precio": "Precio estimado en USD y EUR",
+                    "tip": "Consejo experto exclusivo",
+                    "busqueda": "Nombre del lugar en inglés para buscador de fotos"
                 }}
             ]
         }}
-        Genera 5 puntos de interés.
+        Genera exactamente 5 puntos de interés.
         """
-        
+
         completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[{"role": "user", "content": prompt}],
             response_format={"type": "json_object"}
         )
-        
-        resultado = json.loads(completion.choices[0].message.content)
-        
-        # INTEGRAMOS LAS FOTOS DE UNSPLASH ANTES DE ENVIAR AL FRONTEND
-        for punto in resultado['puntos']:
-            punto['imagen_url'] = buscar_foto_real(punto['q'], dest)
-            
-        return jsonify(resultado)
+
+        res_ia = json.loads(completion.choices[0].message.content)
+
+        # 3. Integrar las fotos de Unsplash a los resultados de la IA
+        for punto in res_ia['puntos']:
+            # Usamos el término de búsqueda generado por la IA + la ciudad
+            punto['imagen_url'] = buscar_foto_unsplash(punto['busqueda'], destino)
+
+        return jsonify(res_ia)
+
     except Exception as e:
+        print(f"Error General: {e}")
         return jsonify({"error": str(e)}), 500
+
+# Necesario para ejecución local si fuera el caso
+if __name__ == "__main__":
+    app.run(debug=True)
