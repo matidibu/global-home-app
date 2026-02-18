@@ -1,26 +1,10 @@
 import os
 import json
-import requests
 from flask import Flask, render_template, request, jsonify
 from groq import Groq
 
 app = Flask(__name__, template_folder='../templates')
-
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
-UNSPLASH_KEY = os.environ.get("UNSPLASH_ACCESS_KEY")
-
-def obtener_foto_real(lugar, destino):
-    try:
-        # Forzamos la búsqueda combinada para que Unsplash no se pierda
-        busqueda = f"{lugar} {destino} tourism"
-        url = f"https://api.unsplash.com/search/photos?query={busqueda}&per_page=1&client_id={UNSPLASH_KEY}"
-        r = requests.get(url, timeout=5)
-        data = r.json()
-        if data.get('results'):
-            return data['results'][0]['urls']['regular']
-    except:
-        pass
-    return "https://images.unsplash.com/photo-1500835595367-9917d9c4aaad?w=800"
 
 @app.route('/')
 def home():
@@ -30,20 +14,36 @@ def home():
 def generate():
     try:
         data = request.json
-        destino = data.get('destino', 'Puerto Rico')
-        nacionalidad = data.get('nacionalidad', 'viajero')
+        dest = data.get('destino', '').title()
+        nac = data.get('nacionalidad', '').title()
+        idioma = data.get('idioma', 'Español')
+        estilo = data.get('estilo', 'standard')
 
         prompt = f"""
-        Eres el Concierge VIP de Global Home Assist. 
-        Crea una guía de lujo para un {nacionalidad} visitando {destino}.
-        Responde exclusivamente en JSON:
+        Actúa como un Concierge VIP de élite. Genera una guía en {idioma}.
+        Destino: {dest}. Viajero de: {nac}. Nivel: {estilo.upper()}.
+        
+        IMPORTANTE: 
+        1. Ortografía perfecta y mayúsculas en nombres.
+        2. Precios en USD y EUR (ej: 40 USD / 37 EUR).
+        3. El campo 'img_keyword' debe ser el nombre del lugar en INGLÉS para el buscador.
+        
+        Responde estrictamente en JSON:
         {{
-            "bienvenida": "Texto corto y elegante de bienvenida",
+            "b": "Bienvenida sofisticada",
+            "requisitos": "Visas y salud para {nac} en {dest}",
             "puntos": [
-                {{"nombre": "Lugar icónico", "tip": "Consejo VIP", "precio": "Costo aprox"}}
+                {{
+                    "n": "Nombre Del Lugar",
+                    "h": "Horarios",
+                    "p": "XX USD / XX EUR",
+                    "t": "Transporte sugerido",
+                    "s": "Tip experto",
+                    "img_keyword": "Eiffel Tower"
+                }}
             ]
         }}
-        Genera 6 puntos.
+        Genera exactamente 5 puntos.
         """
 
         completion = client.chat.completions.create(
@@ -51,13 +51,6 @@ def generate():
             messages=[{"role": "user", "content": prompt}],
             response_format={"type": "json_object"}
         )
-        
-        guia = json.loads(completion.choices[0].message.content)
-
-        # Inyectamos fotos reales
-        for p in guia['puntos']:
-            p['imagen'] = obtener_foto_real(p['nombre'], destino)
-            
-        return jsonify(guia)
+        return jsonify(json.loads(completion.choices[0].message.content))
     except Exception as e:
         return jsonify({"error": str(e)}), 500
