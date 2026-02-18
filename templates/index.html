@@ -6,73 +6,73 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f1f5f9; }
-        .card-vip { background: white; border-radius: 2rem; overflow: hidden; transition: 0.4s; border: 1px solid #e2e8f0; }
-        .card-vip:hover { transform: translateY(-10px); shadow: 0 25px 50px -12px rgba(0,0,0,0.1); }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; }
+        .card-premium { background: white; border-radius: 2rem; overflow: hidden; transition: 0.4s; border: 1px solid #e2e8f0; height: 100%; display: flex; flex-direction: column; }
+        .card-premium:hover { transform: translateY(-10px); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.1); }
     </style>
 </head>
-<body class="p-6 md:p-12">
+<body class="p-4 md:p-12">
 
     <header class="max-w-6xl mx-auto flex items-center gap-6 mb-12">
-        <img src="https://i.ibb.co/LhqZz1L/logo-global-home.png" class="w-20 h-20 object-contain" alt="Global Home Assist">
+        <div class="w-20 h-20 bg-blue-700 rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-lg">GH</div>
         <div>
-            <h1 class="text-4xl font-black italic text-slate-900 uppercase leading-none">Global Home Assist</h1>
-            <p class="text-xs font-bold text-blue-700 tracking-[0.4em] uppercase mt-2">Premium Concierge Service</p>
+            <h1 class="text-3xl font-black italic text-slate-900 uppercase leading-none">Global Home <span class="text-blue-700">Assist</span></h1>
+            <p class="text-[10px] font-bold text-slate-400 tracking-[0.4em] uppercase mt-2">Premium Concierge Service</p>
         </div>
     </header>
 
     <main class="max-w-6xl mx-auto">
-        <div class="bg-white p-10 rounded-[3rem] shadow-xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 border border-slate-100">
-            <input type="text" id="nac" placeholder="Nacionalidad" class="bg-slate-50 p-5 rounded-2xl outline-none border focus:border-blue-500 font-bold">
-            <input type="text" id="dest" placeholder="Destino" class="bg-slate-50 p-5 rounded-2xl outline-none border focus:border-blue-500 font-bold">
-            <button onclick="buscar()" class="bg-blue-700 text-white font-black py-5 rounded-2xl hover:bg-blue-800 transition-all uppercase tracking-widest text-sm">Diseñar Itinerario VIP</button>
-        </div>
+        <section class="bg-white p-8 rounded-[2.5rem] shadow-xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 border border-slate-50">
+            <input type="text" id="nac" placeholder="Nacionalidad" class="bg-slate-50 p-4 rounded-2xl outline-none border focus:border-blue-500 font-bold">
+            <input type="text" id="dest" placeholder="Destino" class="bg-slate-50 p-4 rounded-2xl outline-none border focus:border-blue-500 font-bold">
+            <button onclick="ejecutar()" class="bg-blue-700 text-white font-black py-4 rounded-2xl hover:bg-blue-800 transition-all uppercase text-xs tracking-widest shadow-lg shadow-blue-200">Diseñar Itinerario VIP</button>
+        </section>
 
-        <div id="loading" class="hidden text-center py-20 animate-pulse font-black text-slate-400 uppercase tracking-widest">Sincronizando con Unsplash API...</div>
+        <div id="loader" class="hidden text-center py-20 font-black text-slate-300 animate-pulse uppercase tracking-[0.2em]">Sincronizando con Global Home Engine...</div>
 
-        <div id="resultado" class="hidden space-y-12">
-            <div class="bg-blue-600 p-10 rounded-[2.5rem] text-white shadow-2xl shadow-blue-200">
-                <p id="txt-b" class="text-2xl font-light italic leading-relaxed"></p>
+        <div id="itinerario" class="hidden space-y-12">
+            <div class="bg-blue-600 p-10 rounded-[2.5rem] text-white shadow-2xl shadow-blue-100">
+                <p id="bienvenida" class="text-2xl font-light italic"></p>
             </div>
             <div id="grid" class="grid grid-cols-1 md:grid-cols-3 gap-10"></div>
         </div>
     </main>
 
     <script>
-        async function buscar() {
+        async function ejecutar() {
             const d = document.getElementById('dest').value;
             if(!d) return;
-            document.getElementById('loading').classList.remove('hidden');
-            document.getElementById('resultado').classList.add('hidden');
+            document.getElementById('loader').classList.remove('hidden');
+            document.getElementById('itinerario').classList.add('hidden');
 
             try {
-                const res = await fetch('/api/generate', {
+                const r = await fetch('/api/generate', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ destino: d, nacionalidad: document.getElementById('nac').value })
                 });
-                const data = await res.json();
+                const data = await r.json();
                 
-                document.getElementById('txt-b').innerText = data.b;
+                document.getElementById('bienvenida').innerText = data.b;
                 const grid = document.getElementById('grid');
                 grid.innerHTML = "";
 
-                data.puntos.forEach(p => {
+                data.p.forEach(punto => {
                     grid.innerHTML += `
-                        <div class="card-vip flex flex-col shadow-lg">
-                            <div class="h-64 w-full"><img src="${p.img}" class="w-full h-full object-cover"></div>
+                        <div class="card-premium">
+                            <img src="${punto.img}" class="h-64 w-full object-cover">
                             <div class="p-8 flex flex-col flex-grow">
-                                <h4 class="font-extrabold text-2xl text-slate-800 uppercase mb-3">${p.n}</h4>
-                                <p class="text-sm text-slate-500 italic mb-6 flex-grow leading-relaxed">"${p.s}"</p>
-                                <div class="text-blue-700 font-black text-lg mb-8">${p.p}</div>
-                                <a href="https://www.google.com/search?q=${p.n} tickets" target="_blank" class="block w-full text-center bg-blue-700 text-white py-4 rounded-xl font-bold uppercase text-xs tracking-widest hover:bg-blue-900 transition-all">Tickets & Experiencias</a>
+                                <h4 class="font-black text-2xl text-slate-800 uppercase mb-3">${punto.n}</h4>
+                                <p class="text-sm text-slate-500 italic mb-6 flex-grow leading-relaxed">"${punto.s}"</p>
+                                <div class="text-blue-700 font-black text-xl mb-8">${punto.v}</div>
+                                <a href="https://www.google.com/search?q=${punto.n} tickets" target="_blank" class="block w-full text-center bg-blue-700 text-white py-4 rounded-xl font-bold uppercase text-[10px] tracking-widest">Ver Detalles</a>
                             </div>
                         </div>
                     `;
                 });
-                document.getElementById('resultado').classList.remove('hidden');
-            } catch (e) { alert("Error"); }
-            document.getElementById('loading').classList.add('hidden');
+                document.getElementById('itinerario').classList.remove('hidden');
+            } catch (e) { alert("Error de conexión"); }
+            document.getElementById('loader').classList.add('hidden');
         }
     </script>
 </body>
