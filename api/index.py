@@ -1,35 +1,17 @@
-import os
-import json
-import requests
+import os, json, requests
 from flask import Flask, render_template, request, jsonify
 from groq import Groq
 
 app = Flask(__name__, template_folder='../templates')
-
-# Variables de entorno (Configuradas en Vercel)
-GROQ_KEY = os.environ.get("GROQ_API_KEY")
+client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 UNSPLASH_KEY = os.environ.get("UNSPLASH_ACCESS_KEY")
 
-client = Groq(api_key=GROQ_KEY)
-
-def obtener_foto(lugar_busqueda):
-    """Busca una imagen real en Unsplash."""
+def buscar_foto(q):
     try:
-        url = "https://api.unsplash.com/search/photos"
-        params = {
-            "query": lugar_busqueda,
-            "per_page": 1,
-            "orientation": "landscape",
-            "client_id": UNSPLASH_KEY
-        }
-        r = requests.get(url, params=params, timeout=5)
-        data = r.json()
-        if data.get("results"):
-            return data["results"][0]["urls"]["regular"]
-    except Exception as e:
-        print(f"Error Unsplash: {e}")
-    # Imagen de respaldo global si falla la API
-    return "https://images.unsplash.com/photo-1500835595367-9917d9c4aaad?w=800"
+        r = requests.get(f"https://api.unsplash.com/search/photos?query={q}&per_page=1&client_id={UNSPLASH_KEY}", timeout=5)
+        return r.json()["results"][0]["urls"]["regular"]
+    except:
+        return "https://images.unsplash.com/photo-1500835595367-9917d9c4aaad?w=800"
 
 @app.route('/')
 def home():
@@ -39,40 +21,17 @@ def home():
 def generate():
     try:
         data = request.json
-        dest = data.get('destino', '').title()
-        nac = data.get('nacionalidad', '').title()
-
-        prompt = f"""
-        Actúa como un Concierge VIP de Global Home Assist.
-        Crea una guía para {dest} para un viajero de {nac}.
-        IMPORTANTE: Responde SOLO en formato JSON con esta estructura:
-        {{
-            "bienvenida": "Texto de bienvenida",
-            "requisitos": "Info legal y salud",
-            "puntos": [
-                {{
-                    "n": "Nombre del lugar",
-                    "s": "Tip de experto",
-                    "p": "Precio estimado"
-                }}
-            ]
-        }}
-        Genera exactamente 6 puntos de interés.
-        """
-
+        dest = data.get('destino', 'Miami').title()
+        prompt = f"Dame 5 lugares turisticos en {dest}. Responde SOLO JSON: {{'bienvenida': 'hola', 'puntos': [{{'n': 'nombre', 's': 'tip', 'p': 'precio'}}]}}"
+        
         completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[{"role": "user", "content": prompt}],
             response_format={"type": "json_object"}
         )
-
-        respuesta = json.loads(completion.choices[0].message.content)
-
-        # Buscamos las fotos para cada punto generado
-        for punto in respuesta['puntos']:
-            # Buscamos por "Lugar + Ciudad" para máxima precisión
-            punto['imagen_url'] = obtener_foto(f"{punto['n']} {dest}")
-
-        return jsonify(respuesta)
+        res = json.loads(completion.choices[0].message.content)
+        for p in res['puntos']:
+            p['imagen_url'] = buscar_foto(f"{p['n']} {dest}")
+        return jsonify(res)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
