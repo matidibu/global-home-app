@@ -6,22 +6,21 @@ from groq import Groq
 
 app = Flask(__name__, template_folder='../templates')
 
-# Configuración de clientes
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 UNSPLASH_KEY = os.environ.get("UNSPLASH_ACCESS_KEY")
 
-def buscar_foto_segura(query):
+def obtener_foto_real(lugar, destino):
     try:
-        url = "https://api.unsplash.com/search/photos"
-        params = {"query": query, "per_page": 1, "client_id": UNSPLASH_KEY}
-        r = requests.get(url, params=params, timeout=5)
+        # Forzamos la búsqueda combinada para que Unsplash no se pierda
+        busqueda = f"{lugar} {destino} tourism"
+        url = f"https://api.unsplash.com/search/photos?query={busqueda}&per_page=1&client_id={UNSPLASH_KEY}"
+        r = requests.get(url, timeout=5)
         data = r.json()
-        if data.get("results"):
-            return data["results"][0]["urls"]["regular"]
+        if data.get('results'):
+            return data['results'][0]['urls']['regular']
     except:
         pass
-    # Foto de respaldo profesional si la API falla o no hay resultados
-    return "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800"
+    return "https://images.unsplash.com/photo-1500835595367-9917d9c4aaad?w=800"
 
 @app.route('/')
 def home():
@@ -31,23 +30,34 @@ def home():
 def generate():
     try:
         data = request.json
-        dest = data.get('destino', 'Puerto Rico')
-        
-        # Prompt simplificado para que la IA no invente nombres de campos
-        prompt = f"Eres un Concierge VIP. Destino: {dest}. Retorna SOLO un objeto JSON: {{'b': 'bienvenida', 'p': [{{'n': 'nombre', 's': 'descripcion', 'v': 'precio'}}]}}"
-        
+        destino = data.get('destino', 'Puerto Rico')
+        nacionalidad = data.get('nacionalidad', 'viajero')
+
+        prompt = f"""
+        Eres el Concierge VIP de Global Home Assist. 
+        Crea una guía de lujo para un {nacionalidad} visitando {destino}.
+        Responde exclusivamente en JSON:
+        {{
+            "bienvenida": "Texto corto y elegante de bienvenida",
+            "puntos": [
+                {{"nombre": "Lugar icónico", "tip": "Consejo VIP", "precio": "Costo aprox"}}
+            ]
+        }}
+        Genera 6 puntos.
+        """
+
         completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[{"role": "user", "content": prompt}],
             response_format={"type": "json_object"}
         )
         
-        res_ia = json.loads(completion.choices[0].message.content)
+        guia = json.loads(completion.choices[0].message.content)
 
-        # Buscamos las fotos para cada punto
-        for punto in res_ia.get('p', []):
-            punto['img'] = buscar_foto_segura(f"{punto['n']} {dest}")
+        # Inyectamos fotos reales
+        for p in guia['puntos']:
+            p['imagen'] = obtener_foto_real(p['nombre'], destino)
             
-        return jsonify(res_ia)
+        return jsonify(guia)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
