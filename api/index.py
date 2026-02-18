@@ -3,7 +3,6 @@ import json
 from flask import Flask, render_template, request, jsonify
 from groq import Groq
 
-# Configuración de rutas para Vercel
 base_dir = os.path.dirname(os.path.abspath(__file__))
 template_dir = os.path.join(base_dir, '..', 'templates')
 
@@ -18,43 +17,27 @@ def home():
 def generate():
     try:
         data = request.json
-        dest = data.get('destino')
-        nac = data.get('nacionalidad')
-        estilo = data.get('estilo')
-        perfil = data.get('perfil')
-        idioma = data.get('idioma')
-        moneda_nac = data.get('moneda')
+        dest = data.get('destino', 'San Juan')
+        nac = data.get('nacionalidad', 'Argentino')
+        moneda_nac = data.get('moneda', 'USD')
         
         prompt = f"""
-        Actúa como un Concierge VIP Internacional. Genera una guía en {idioma}.
-        Perfil: {perfil} | Nivel: {estilo.upper()} | Viajero de: {nac}.
-        
-        INSTRUCCIÓN DE MONEDA:
-        Para cada precio mencionado en 'puntos', indica el costo estimado en:
-        1. Moneda local de {dest}.
-        2. Moneda del viajero ({moneda_nac}).
-        3. Dólares Estadounidenses (USD).
-
-        Responde estrictamente en JSON con esta estructura:
+        Actúa como Concierge VIP de Global Home Assist. Guía para {nac} en {dest}.
+        Responde exclusivamente en JSON:
         {{
-            "b": "Bienvenida cálida y profesional",
-            "requisitos": "Visa, pasaportes y tasas para {nac} entrando a {dest}",
-            "servicios": {{
-                "consulado": {{"n": "Representación de {nac}", "m": "http://googleusercontent.com/maps.google.com/search?q=consulate+{nac}+{dest}"}},
-                "hospital": {{"n": "Hospital de Referencia {estilo}", "m": "http://googleusercontent.com/maps.google.com/search?q=hospital+{dest}"}},
-                "policia": {{"n": "Seguridad Central", "m": "http://googleusercontent.com/maps.google.com/search?q=police+station+{dest}"}}
-            }},
+            "bienvenida": "Texto elegante de bienvenida",
+            "requisitos": "Breve estatus legal y visas",
             "puntos": [
                 {{
-                    "n": "Nombre del lugar", 
-                    "h": "Horarios sugeridos", 
-                    "p": "Costo en moneda local / {moneda_nac} / USD", 
-                    "t": "Transporte recomendado", 
-                    "s": "Consejo de experto",
-                    "key": "Lugar emblemático de {dest}"
+                    "n": "Nombre del Lugar",
+                    "h": "Horario VIP",
+                    "p": "Precio en Local / {moneda_nac} / USD",
+                    "s": "Reseña corta y sofisticada",
+                    "img_keyword": "sigla del lugar para buscador de fotos"
                 }}
             ]
         }}
+        Genera 6 puntos turísticos de alta calidad.
         """
 
         completion = client.chat.completions.create(
@@ -62,7 +45,6 @@ def generate():
             messages=[{"role": "user", "content": prompt}],
             response_format={"type": "json_object"}
         )
-        
         return jsonify(json.loads(completion.choices[0].message.content))
     except Exception as e:
         return jsonify({"error": str(e)}), 500
