@@ -6,148 +6,82 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background: linear-gradient(180deg, #1e293b 0%, #475569 35%, #94a3b8 70%, #f1f5f9 100%);
-            background-attachment: fixed; min-height: 100vh;
-        }
-        .glass-panel { background: rgba(255, 255, 255, 0.98); border-radius: 2rem; border: 1px solid rgba(255,255,255,0.5); shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        .card-point { border-radius: 1.5rem; overflow: hidden; background: white; transition: 0.4s; height: 100%; display: flex; flex-direction: column; }
-        .card-point:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: linear-gradient(180deg, #cbd5e1 0%, #f8fafc 100%); min-height: 100vh; }
+        .premium-card { background: white; border-radius: 2rem; overflow: hidden; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255,255,255,0.3); }
+        .premium-card:hover { transform: translateY(-12px); box-shadow: 0 30px 60px -12px rgba(0,0,0,0.15); }
+        .img-gradient { background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.4)); }
     </style>
 </head>
 <body class="p-4 md:p-10">
 
-    <header class="max-w-7xl mx-auto flex justify-between items-center mb-10">
-        <div class="flex items-center gap-4">
-            <img src="https://i.ibb.co/LhqZz1L/logo-global-home.png" alt="Logo" class="w-12 h-12 rounded-full shadow-lg border-2 border-white">
-            <h1 class="text-2xl font-extrabold tracking-tighter italic text-white uppercase">Global Home <span class="font-light">Assist</span></h1>
-        </div>
-        <div class="hidden md:flex gap-6 text-white text-xs font-bold uppercase tracking-[0.2em] opacity-80">
-            <span>Explorar</span><span>Servicios</span><span>Mi Cuenta</span>
+    <header class="max-w-7xl mx-auto flex items-center gap-6 mb-12">
+        <img src="https://i.ibb.co/LhqZz1L/logo-global-home.png" alt="Global Home Assist" class="w-20 h-20 object-contain drop-shadow-md">
+        <div>
+            <h1 class="text-4xl font-extrabold italic text-slate-800 uppercase tracking-tighter leading-none">Global Home <span class="text-blue-700 font-light">Assist</span></h1>
+            <p class="text-[10px] font-bold text-blue-800 tracking-[0.5em] uppercase mt-2">Premium Concierge Service</p>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto space-y-8">
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="glass-panel p-8 space-y-4 shadow-xl border-t-4 border-blue-500">
-                <h3 class="font-bold text-gray-800 text-xs uppercase border-b pb-2 tracking-widest">Configuración de Viaje</h3>
-                <input type="text" id="nac" placeholder="Nacionalidad" class="w-full border-b p-2 outline-none">
-                <input type="text" id="dest" placeholder="Ciudad Destino" class="w-full border-b p-2 outline-none">
-                <select id="idioma" class="w-full border-b p-2 outline-none bg-transparent">
-                    <option value="Español">Español</option>
-                    <option value="Inglés">English</option>
-                    <option value="Italiano">Italiano</option>
-                </select>
-            </div>
-
-            <div class="glass-panel p-8 flex flex-col justify-between shadow-xl">
-                <select id="estilo" class="w-full p-4 border rounded-xl bg-gray-50 font-bold mb-4">
-                    <option value="standard">Standard Execution</option>
-                    <option value="premium">Premium Experience</option>
-                </select>
-                <button onclick="generar()" class="bg-blue-700 text-white w-full py-5 rounded-xl font-black text-xs uppercase tracking-[0.2em] hover:bg-blue-800 transition-all">Diseñar Itinerario</button>
-            </div>
-
-            <div class="bg-blue-800 text-white p-8 rounded-[2rem] shadow-2xl relative overflow-hidden">
-                <h4 class="font-bold text-xs mb-3 border-b border-blue-400 pb-1 uppercase tracking-widest">Estatus Legal</h4>
-                <p id="req" class="text-xs leading-relaxed opacity-90 font-light italic">Sincronizando trámites consulares...</p>
-            </div>
+    <main class="max-w-7xl mx-auto space-y-10">
+        <section class="bg-white/80 backdrop-blur-md p-8 rounded-[2.5rem] shadow-2xl grid grid-cols-1 md:grid-cols-3 gap-6">
+            <input type="text" id="nac" placeholder="Nacionalidad" class="p-5 rounded-2xl bg-white border border-slate-100 outline-none focus:ring-2 ring-blue-500 font-bold">
+            <input type="text" id="dest" placeholder="¿A dónde vamos?" class="p-5 rounded-2xl bg-white border border-slate-100 outline-none focus:ring-2 ring-blue-500 font-bold">
+            <button onclick="generar()" class="bg-blue-700 text-white font-black py-5 rounded-2xl hover:bg-blue-800 transition-all uppercase tracking-widest text-xs shadow-xl shadow-blue-200">Diseñar Itinerario VIP</button>
         </section>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <a id="l-booking" target="_blank" class="bg-white p-5 rounded-2xl flex items-center justify-between shadow hover:bg-blue-50 transition-all">
-                <span class="font-bold text-blue-900 text-xs uppercase tracking-tighter">➔ Booking.com VIP Deall</span>
-            </a>
-            <a id="l-airbnb" target="_blank" class="bg-white p-5 rounded-2xl flex items-center justify-between shadow hover:bg-rose-50 transition-all">
-                <span class="font-bold text-rose-700 text-xs uppercase tracking-tighter">🏠 Airbnb Luxury residences</span>
-            </a>
-            <a id="l-autos" target="_blank" class="bg-white p-5 rounded-2xl flex items-center justify-between shadow hover:bg-emerald-50 transition-all">
-                <span class="font-bold text-emerald-700 text-xs uppercase tracking-tighter">🚗 RentalCars Premium</span>
-            </a>
-        </div>
+        <div id="loader" class="hidden text-center py-20 animate-pulse font-black text-slate-400 uppercase tracking-widest">Sincronizando con Global Home Assist API...</div>
 
-        <div id="load" class="hidden text-center text-white font-bold animate-pulse py-10 tracking-[0.5em]">CONSULTANDO SERVIDORES GLOBALES...</div>
-
-        <div id="res" class="hidden space-y-8">
-            <div id="b" class="glass-panel p-8 text-center text-gray-700 italic border-none shadow-md"></div>
-            <div id="lista-puntos" class="grid grid-cols-1 md:grid-cols-3 gap-8 pb-20"></div>
+        <div id="itinerario" class="hidden space-y-12">
+            <div class="bg-slate-800 p-10 rounded-[3rem] text-white shadow-2xl">
+                <p id="bienvenida" class="text-2xl font-light italic leading-relaxed"></p>
+            </div>
+            
+            <div id="grid" class="grid grid-cols-1 md:grid-cols-3 gap-10 pb-20"></div>
         </div>
     </main>
 
     <script>
         async function generar() {
-            const params = {
-                destino: document.getElementById('dest').value,
-                nacionalidad: document.getElementById('nac').value,
-                estilo: document.getElementById('estilo').value,
-                idioma: document.getElementById('idioma').value
-            };
-            if(!params.destino) return alert("Indique el destino");
-
-            document.getElementById('load').classList.remove('hidden');
-            document.getElementById('res').classList.add('hidden');
+            const d = document.getElementById('dest').value;
+            if(!d) return;
+            document.getElementById('loader').classList.remove('hidden');
+            document.getElementById('itinerario').classList.add('hidden');
 
             try {
                 const r = await fetch('/api/generate', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(params)
+                    body: JSON.stringify({ destino: d, nacionalidad: document.getElementById('nac').value })
                 });
-                const d = await r.json();
+                const data = await r.json();
 
-                document.getElementById('b').innerText = d.b;
-                document.getElementById('req').innerText = d.requisitos;
+                document.getElementById('bienvenida').innerText = data.bienvenida;
+                const grid = document.getElementById('grid');
+                grid.innerHTML = "";
 
-                const AID = "TU_ID_AQUÍ"; // Tu ID de afiliado
-                document.getElementById('l-booking').href = `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(params.destino)}&aid=${AID}`;
-                document.getElementById('l-airbnb').href = `https://www.airbnb.com/s/${encodeURIComponent(params.destino)}/homes`;
-                document.getElementById('l-autos').href = `https://www.rentalcars.com/search-results?locationName=${encodeURIComponent(params.destino)}`;
-
-                const list = document.getElementById('lista-puntos');
-                list.innerHTML = "";
-                
-                d.puntos.forEach(p => {
-                    // SOLUCIÓN DEFINITIVA DE IMAGEN: Buscador integrado
-                    const fotoUrl = `https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80`; // Imagen base si falla
-                    const fotoDinamica = `https://source.unsplash.com/800x600/?${encodeURIComponent(p.img_keyword || p.n)}`;
-
-                    list.innerHTML += `
-                        <div class="card-point shadow-lg">
-                            <div class="h-52 relative">
-                                <img src="${fotoDinamica}" 
-                                     class="w-full h-full object-cover" 
-                                     onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800'">
-                                <div class="absolute top-4 right-4 bg-white/95 px-3 py-1 rounded-full text-[10px] font-black text-blue-700 shadow-md">
-                                    ${p.p}
-                                </div>
+                data.puntos.forEach(p => {
+                    grid.innerHTML += `
+                        <div class="premium-card flex flex-col shadow-lg">
+                            <div class="h-72 w-full relative">
+                                <img src="${p.img}" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 img-gradient"></div>
+                                <div class="absolute top-4 right-4 bg-white px-3 py-1 rounded-full text-[10px] font-black text-blue-700 shadow-lg italic uppercase">${p.p}</div>
                             </div>
-                            <div class="p-6 flex flex-col flex-grow">
-                                <h4 class="font-extrabold text-base mb-2 uppercase tracking-tight text-slate-800">${p.n}</h4>
-                                <p class="text-[10px] text-gray-500 italic mb-6 leading-relaxed flex-grow">"${p.s}"</p>
+                            <div class="p-8 flex flex-col flex-grow">
+                                <h4 class="font-black text-2xl text-slate-800 uppercase mb-3 tracking-tighter leading-tight">${p.n}</h4>
+                                <p class="text-sm text-slate-500 italic mb-8 flex-grow leading-relaxed">"${p.s}"</p>
                                 
-                                <div class="space-y-3 mt-auto">
-                                    <a href="https://www.getyourguide.com/s?q=${encodeURIComponent(p.n)}&customer_id=${AID}" target="_blank" 
-                                       class="block w-full text-center bg-blue-700 text-white py-3.5 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg">Reservar Experiencia</a>
-                                    
-                                    <div class="grid grid-cols-2 gap-2">
-                                        <a href="https://www.google.com/search?q=${encodeURIComponent(p.n + ' official tickets')}&btnI" target="_blank" 
-                                           class="bg-gray-100 text-gray-600 text-center py-2.5 rounded-lg text-[9px] font-bold uppercase">Sitio Oficial</a>
-                                        <a href="https://www.google.com/maps/search/${encodeURIComponent(p.n + ' ' + params.destino)}" target="_blank" 
-                                           class="bg-gray-100 text-gray-600 text-center py-2.5 rounded-lg text-[9px] font-bold uppercase">Mapa</a>
-                                    </div>
+                                <div class="space-y-3">
+                                    <a href="https://www.getyourguide.com/s?q=${encodeURIComponent(p.n)}" target="_blank" class="block w-full text-center bg-blue-700 text-white py-4 rounded-xl font-bold uppercase text-[10px] tracking-widest shadow-lg hover:bg-blue-800 transition-all">Ver Actividades (GetYourGuide)</a>
+                                    <a href="https://www.booking.com/searchresults.html?ss=${encodeURIComponent(p.n)}" target="_blank" class="block w-full text-center bg-slate-100 text-slate-600 py-3 rounded-xl font-bold uppercase text-[9px] tracking-widest hover:bg-slate-200 transition-all">Hoteles cercanos (Booking)</a>
                                 </div>
                             </div>
                         </div>
                     `;
                 });
-
-                document.getElementById('load').classList.add('hidden');
-                document.getElementById('res').classList.remove('hidden');
-            } catch (e) { 
-                document.getElementById('load').classList.add('hidden');
-                alert("Error de conexión"); 
-            }
+                document.getElementById('itinerario').classList.remove('hidden');
+            } catch (e) { alert("Error de conexión"); }
+            document.getElementById('loader').classList.add('hidden');
         }
     </script>
 </body>
